@@ -1,0 +1,47 @@
+The government of virtualBit believes that the health of its citizens is the highest priority. It has devised an N-day health plan. 
+During these N days, the citizens are encouraged to go to the gym for workouts.
+
+A person may or may not go to the gym on any day. The people of virtualBit are a lazy lot, and they don't want to go to the gym for more than one consecutive day. 
+Given the number of days N, print the number of ways the N-day plan can be completed.
+
+Note that it is possible to not go to the gym on any day at all and still complete the plan.
+
+Input
+
+The first line contains T, the number of test cases.
+
+Each test case contains a number N denoting the number of days.
+
+Output
+
+Each test case contains a single number denoting the number of ways by which the N-day plan may be completed.
+
+Output your answer modulo 10^9+7.
+
+Constraints
+
+1 <= T <= 60000
+
+1 <= N <= 10^18
+
+-----------------------------------------
+
+Let 0 represent a rest day and 1 a gym day. This question asks for binary strings of length N with no consecutive 1s. 
+Let this number be T(n)
+
+If the first digit is 0, the remaining can be done in T(n-1) ways.
+If the first digit is 1, the second is forced to be 1. The remaining can be done in T(n - 2) ways.
+
+T(n) = T(n-1) + T(n-2) and T(1) = 2
+
+| T(n)   | = |1  1| |T(n-1)|
+| T(n-1) |   |1  0| |T(n-2)|
+
+    There is a correspondence in between T(n) and the Fibonacci number F(n+2) since T(0) = F(2) and T(1) = F(3) and both series follow the same recurrence.
+    This allows us to formally define T(-1) = F(1) even if it does not make sense in our problem.
+    | T(n)  | = A^{n} |T(0)  |
+    | T(n-1)| =       |T(-1) |,
+
+    T(1) = 2, T(0) = 1, T(-1) = F(1) = 1
+
+Binary matrix exponentiation has to be done. The numbers are simply too big for the problem to be done in linear time. 

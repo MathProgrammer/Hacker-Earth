@@ -1,0 +1,28 @@
+Harry was contesting to be the most stylist person in his college. He had to collect maximum points from the judges to be able to win. However there was a problem. The judges were sitting in a line and each pair of adjacent judges had ego issues with each other. So if one judge gave X points to Harry then the next judge won’t give him any points. Harry had a friend in the organizing team and through him he had found out the exact points he would get from each judge if he chose their score to be considered. Help him find out the maximum points he can score.
+
+INPUT
+The first line of input contains the number of test cases, T.
+0 < T < = 10
+Each test case starts with a number N, the number of judges.
+0 <= N < = 10^4. 
+The next line will have N numbers, number of points each judge gave Harry
+0 < = X(i) < = 10^9.
+The order of the judges does not change.
+
+OUTPUT
+For each test case print “Case T: A” without quotes in a single line. 
+T is the case number, starting with 1.
+A is the maximum number of points Harry can collect.
+
+----------------------------------------------------------------------------------
+
+Let f(x) be the maximum score that can be gotten till judge x.
+    f(0) = 0  - If there are no judges, no point can be scored.
+    f(1) = A[1] - If there is one judge, his score is the maximum.
+
+    f(i) = max{f(i-1), f(i-2) + A[i]}
+    	Either the i-th judge is not selected. Then f(i) = f(i-1)
+    	Or the i-th judge is selected. Then f(i) = A[i] + f(i - 2)
+    We choose the greater of these values.
+
+The answer is f(n), where n is the number of judges.

@@ -1,0 +1,67 @@
+The very famous football club Manchester United decided to popularize football in India by organizing a football fest. The fest had many events for different sections of
+ people.
+For the awesome coders of Hacker Earth, there was an event called PASS and BACK. In this event, the coders were given 
+
+N passes and players having ids between 1 and 1000000.
+Initially some player with a given id had the ball in his possession. The coders had to make a program to display the id of the player who possessed the ball after exactly 
+N passes.
+
+Description of the passes:
+There were two kinds of passes:
+1. P ID
+2. B
+
+Explanation :
+
+for the first kind of pass, the player in possession of the ball passes the ball to player with id=ID
+while for the second kind of a pass, the player in possession of the ball passes the ball back to the player who had passed the ball to him.
+
+NOTE:
+
+It is guaranteed that the given order of all the passes will be a valid order .
+
+INPUT :
+
+The first line of the input contains the number of test cases. For each test case, two space separated integers 
+N and ID ( of the player possessing the ball in the very beginning). 
+
+N lines follow describing the passes. ( for description of the passes, refer the statement above. )
+
+OUTPUT :
+
+Output to each test case should be a single line containing the "Player" 
+ID (quotes for clarity) of the player who possesses the ball after N passes.
+
+-----------------------------------------------------------------
+
+Input - 
+
+1
+10 23
+P 86
+P 63
+P 60
+B
+P 47
+B
+P 99
+P 9
+B
+B
+
+Player 9 - Output
+
+------------------------------------------------------------
+
+We need to keep track of two quantities - previous player and current player.
+
+Initially, the first player is the current player. 
+
+If, event is a pass, 
+	previous player = current player
+	current player = id
+
+If event is Back
+	swap (previous, current)
+
+Return the current player after N passes.

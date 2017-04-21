@@ -1,0 +1,26 @@
+Consider an array of  integers, , where all but one of the integers occur in pairs. In other words, every element in  occurs exactly twice except for one unique element.
+
+Given , find and print the unique element.
+
+Input Format
+
+The first line contains a single integer, , denoting the number of integers in the array. 
+The second line contains  space-separated integers describing the respective values in .
+
+Constraints
+
+It is guaranteed that  is an odd number.
+, where .
+Output Format
+
+Print the unique number that occurs only once in  on a new line.
+
+-----------------------------------------------------------------------
+
+Imagine all the numbers are written in their binary forms. The bits that are set in this number  will be set an even number of times.
+
+For example, 5 - 101. If 5 occurs twice, the bits at the first and third position will occur atleast twice.
+
+So, when we apply bitwise XOR over all the numbers, the only bits that remain set belong to the lonely integer since it doesn't have any counterpart to 'neutralise' it.
+
+The answer is the bitwise XOR of all the numbers.

@@ -1,0 +1,21 @@
+Today Tony Stark is upset with Jarvis, as it blew the whole plan of him defeating the Flash in parallel universe by showing him two images of Flash. 
+Tony couldn't identify the real one and ended up getting hit hard. Jarvis is upset too and he wants to prove that it was not his mistake. 
+Help Jarvis to prove himself faithful and true AI.
+
+To prove, that Jarvis is not at fault, he is given N non-negative integers and he has to identify a lone integer among them. 
+A lone integer is defined as an integer in the given array of integers that is left alone after pairing each of the other integers. 
+Two integers can be paired if they have same value in decimal number system and have different indices in the array. 
+(Look at example case for better understanding and it is guaranteed that there is at most one such integer.)
+
+NOTE: An integer can't be paired with itself and once paired it can't be used to pair with other integers. (There are spaces after each input.)
+INPUT:
+First line will contain T, number of times Jarvis tests itself. For each test there will be two lines. 
+First line of each test will contain number of integers N he takes, and next line will have N non-negative integers.
+
+-------------------------------------------------------------------------------------
+
+The XOR of all numbers in the array gives us the ONLY integer that occurs an odd (in this case 1) number of times in the array. Here's a proof.
+
+XOR is commutative
+
+XOR(a, b, c, c, b, a, x) = XOR(a, a, b, b, c, c, x) = XOR(a, a)XOR(b, b) XOR(c, c) XOR(x) = XOR(0, 0, 0, x) = x

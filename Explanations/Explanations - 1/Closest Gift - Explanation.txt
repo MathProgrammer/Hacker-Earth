@@ -1,0 +1,10 @@
+There are an infinite number of primes so we'll always have a prime after the number.
+We need to apply a sqrt(n) primality test on the numbers.
+
+Note - It is allowed for distance to be 0.
+
+    for(distance = 0; ; distance++)
+    {
+        if(isPrime(number + distance))
+            break;
+    }

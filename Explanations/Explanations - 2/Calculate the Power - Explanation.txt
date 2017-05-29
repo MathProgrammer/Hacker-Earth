@@ -1,0 +1,9 @@
+Binary Exponentiation 
+
+    for( ;exponent > 0; exponent = exponent >> 1)
+    {
+        if(exponent%2 == 1)
+            answer = (answer*base)%MOD;
+
+        base = (base*base)%MOD;
+    }

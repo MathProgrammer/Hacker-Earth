@@ -1,0 +1,11 @@
+Firstly, notice that a^b (mod m) = a. a. a.... a (b times) (mod m). 
+Each a can be replaced by it's residue mod m. So, a^b (mod m) = (a mod m)^b (mod m)
+
+    for(i = 1; i <= no_of_numbers; i++)
+    {
+        scanf("%d",&current_number);
+        exponent = (i == 1 ? current_number : gcd(exponent, current_number) );
+        base = (base*current_number)%MOD;
+    }
+
+Binary GCD algorithm used for GCD and Binary Exponentiation to calculate the power. 

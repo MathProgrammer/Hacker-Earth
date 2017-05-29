@@ -1,0 +1,24 @@
+2 is the only even prime number. Numbers with 2 divisors (1 and itself) are prime.
+
+Use Sieve of Erathosthenes and then an array to keep track of sum of all primes.
+
+    is_Prime[0] = is_Prime[1] = 0;
+    for(i = 2; i*i <= SIZE; i++)
+        if(is_Prime[i] == 1)
+            for(multiple = 2; i*multiple <= SIZE; multiple++)
+                is_Prime[i*multiple] = 0;
+
+
+    sum_of_primes_till[0] = 0;
+    for(i = 1; i <= SIZE; i++)
+        sum_of_primes_till[i] = is_Prime[i] + sum_of_primes_till[i-1];
+
+
+Then, just display the difference.
+
+	if(left > right)
+            swap(left, right);
+
+        printf("%d\n", sum_of_primes_till[right] - sum_of_primes_till[left - 1]);
+
+The array was too big to use an array. Using a static array worked for 98 test cases ... Using a global array worked for all of them.

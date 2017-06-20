@@ -1,0 +1,13 @@
+I thought there was something better than the naive approach than maintaing a boolean vector of the maximum number of cities but since the number is small, it's okay.
+
+    for(int i = 1; i <= no_of_roads; i++)
+    {
+        scanf("%d %d", &city_x, &city_y);
+        visited[city_x] = visited[city_y] = true;
+    }
+
+    for(int i = 1; i < MAX; i++)
+        if(visited[i] == true)
+            no_of_cities++;
+
+    printf("%d\n", no_of_cities);

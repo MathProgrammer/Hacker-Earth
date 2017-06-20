@@ -1,0 +1,25 @@
+Solve the simpler problem for 2 colours ... If there are a and b stones ... We take min(a, b) stones first and then take the remaining stones ...
+
+This is given by (a + b)/2 + (a + b)%2... In each turn we can only take two stones...
+
+If there are three piles ... First we take as many 3 as possible and then reduce it to the simpler problem ...
+
+I made the mistake of thinking first take min(a, b, c) and then take from individual piles. This is not optimal 
+
+For eg, 7, 3, 2 ... WE take 3 from each - 5, 1, 0 ... If we take seperately it takes 3 + 1 = 4 moves. If we take together, then it takes 1 + 2= 3 moves 
+
+----------------------------------------------------------
+
+min_colour = min(red, min(green, blue));
+    
+    
+
+red -= min_colour;
+    
+green -= min_colour;
+    
+blue -= min_colour;
+    
+    
+
+no_of_artifacts = min_colour + (red + green + +blue)/2 + (red + green + +blue)%2;   

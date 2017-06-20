@@ -1,0 +1,11 @@
+A tree has N-1 edges ... We're counting every edge twice ...
+
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        int degree_i;
+        cin >> degree_i;
+
+        no_of_edges += degree_i;
+    }
+
+    cout << (no_of_edges == 2*(no_of_vertices - 1) ? "Yes\n" : "No\n");

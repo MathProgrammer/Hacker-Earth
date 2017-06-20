@@ -1,0 +1,41 @@
+Ashima has brought home n cats. Now, being a cat lover, she is taking care of the cats and has asked me to bring cat food for them. 
+Being a guy with no idea what to buy, I brought some n packets of cat food 
+(I atleast knew that each and every cat being a good junkie will completely eat a whole packet of cat food and won't share anything with other cats). 
+Each food packet has some calorie value c. If a cat with original strength s eats that packet, the strength of the cat becomes c*s. 
+Now, Ashima is angry at me that I did not know this fact and now all the cats won't be able to eat the maximum strength packet and increase their strength 
+(and annoying powers). 
+
+To calm her mood, I need your help. I will provide you with the original strength of each cat and the calorie value of each of the n packets. 
+Help me by telling me what is the maximum value of sum of the final strengths of the cats that can be obtained if each cat is given a whole packet of cat food to eat. 
+
+----------------------------------------------------------------------------------------------
+
+Notice the following - a < b, then ca < cb and if c' < c, then c'a < cb
+
+To maximise the strength of all the cats' sum, we must make each product as much as possible.
+
+We pair the strongest cat with the most calories, because it is optimal.
+The next strongest with the next highest and so on ... Ultimately, match the sorted arrays.
+
+Complexity is O(n Log n). Learnt how to sort a vector in C++
+
+----------------------------------------
+
+    vector <int> strength(no_of_cats);
+    vector <int> calories(no_of_cats);
+    
+    for(i = 0; i < no_of_cats; i++)
+        scanf("%d", &strength[i]);
+        
+    for(i = 0; i < no_of_cats; i++)
+        scanf("%d", &calories[i]);
+     
+    sort(strength. begin(), strength.end() );
+    sort(calories.begin(), calories.end() );
+    
+    for(i = 0; i < no_of_cats; i++)
+        final_strength += strength[i]*1LL*calories[i];
+        
+    printf("%lld\n", final_strength);
+
+-------------------------------------------------------- Also important to notice overlflow is possible and type cast to avoid it.

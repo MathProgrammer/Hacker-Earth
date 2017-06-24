@@ -1,0 +1,22 @@
+Another guess the question from the input output sample question.
+
+I couldn't solve the previous one (sum of divisors) so I was already looking for something related to divisors.
+
+Didn't take me long to figure out this is the number of divisors of a number (including 1 and itself)
+There is no special case of n = 1 here, but be careful while handling perfect squares.
+
+Here's the O(root (n)) solution.
+
+-----------------------------------------------
+
+void solve()
+{
+    int number, number_of_divisors = 0;
+    cin >> number;
+
+    for(int divisor = 1; divisor*divisor <= number; divisor++)
+        if(number%divisor == 0)
+            number_of_divisors += (divisor*divisor == number ? 1 : 2);
+
+    cout << number_of_divisors << "\n";
+}

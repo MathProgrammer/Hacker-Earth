@@ -1,0 +1,72 @@
+Find all numbers K > 1, which leave the same remainder with all elements of the array.
+
+-------------------------------------
+
+Very interesting question.
+
+If a number K, leaves the same remainder with 2 numbers, then it must divide their difference.
+
+So, the question can be reframed to say ... Find all numbers K which divide all the consecutive differences of all elements in the array.
+
+In other words, Find the GCD of the difference array and print all it's factors in sorted order.
+
+-----------------------------------------
+
+1. Construct an absolute difference array
+
+I learnt that the push back function works AFTER the memory allocated ... so vector<int> v (10) .. if you write push back now, it goes to the 11th position.
+This caused a bug. Anyway, here's how to make a difference array. 
+
+O(n)
+
+    vector <int> difference_array;
+    for(int i = 1; i < number_of_elements; i++)
+        difference_array.push_back( abs(number[i] - number[i - 1]) );
+
+-------------------------------------------------
+
+2. Find the GCD of this difference array ... O(N*K) , where K is a constant term in finding the GCD 
+
+     int difference_array_gcd;
+    for(int i = 0; i < number_of_elements - 1; i++)
+        difference_array_gcd = (i == 0 ? difference_array[i] : gcd(difference_array_gcd, difference_array[i]));
+
+int gcd(int a, int b)
+{
+    if(a == 0 || b == 0)
+        return (a + b);
+    else 
+        return gcd(min(a, b), (max(a, b)%min(a, b)) );
+}
+
+-----------------------------------------------
+
+3. Factorise GCD ... O(root(n))
+
+    vector <int> factors_of_gcd;
+    for(int i = 2; i*i <= difference_array_gcd; i++)
+        if(difference_array_gcd%i == 0)
+        {
+            if(i*i == difference_array_gcd)
+                factors_of_gcd.push_back(i);
+            else
+            {
+                factors_of_gcd.push_back(i);
+                factors_of_gcd.push_back(difference_array_gcd/i);
+            }
+        }
+
+factors_of_gcd.push_back(difference_array_gcd);
+
+------------------------------------------
+
+4. Sort and print ... O(N log N + N)
+
+sort(all(factors_of_gcd));
+    
+    for(unsigned int i = 0; i < factors_of_gcd.size(); i++)
+        cout << factors_of_gcd[i] << " ";
+
+--------------------------------------------------------
+
+A single question combines concepts of difference array, GCD array and factorisation ! Beautiful question.

@@ -1,0 +1,52 @@
+
+--------------------------------------------------
+
+So the first thought was to make a boolean vector of length 10^6 and perform a simple sieve. I added the primes to a set.
+
+The advantage of doing this was saving memory... I didn't need a vector of 10^6 globally ... Just inside the precomputing function.
+The problem is ... (is_prime[i] == 0 ? takes O(1) time and primes.count(i) == 1 takes O(log n) time ... I saved quite a lot of time by using a global vector.)
+
+Another unexpected optimisation I had was that after the prime count reaches k, set it to 0 again ... This was faster than checking if it's a multiple of k.
+
+Unexpectedly, I didn't get an overflow error. int suffices for this problem.
+
+--------------------------------------------
+
+vector <int> is_prime(1000000 + 1, true);
+
+void precompute_primes()
+{
+    for(int i = 2; i <= 1000000; i++)
+    {
+        if(is_prime[i])
+        {
+            for(int composite = 2*i; composite <= 1000000; composite += i)
+                is_prime[composite] = false;
+        }
+    }
+}
+
+void solve()
+{
+    int prime_sum = 0, no_of_elements, k,  prime_count = 0;
+    cin >> no_of_elements >> k;
+
+    for(int i = 1 ; i <= no_of_elements; i++)
+    {
+        int element_i;
+        cin >> element_i;
+
+        if(is_prime[element_i] && element_i >= 2)
+            prime_count++;
+
+
+        if(prime_count == k)
+        {
+            prime_sum += element_i;
+            prime_count = 0;
+        }
+
+    }
+
+    cout << prime_sum << "\n";
+}

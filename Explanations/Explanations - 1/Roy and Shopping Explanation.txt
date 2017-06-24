@@ -1,0 +1,60 @@
+Given an integer n, find n - p(n), where p(n) is the smallest prime factor of n.
+
+---------------------------------------------------
+
+I learnt how to do a coloured sieve. My initial approach was to precompute a list of all primes and then go through the list of primes till p[i]^2 <= n,
+And return either p[i] or n itself ... This was too slow and got a TLE.
+
+The idea is right .. Precomputation and a sieve needs to be done.
+
+However, a coloured sieve needs to be done. 
+
+In a normal sieve, we go through the list, pick up the first unmarked number and then  cross out all it's multiples and repeat...
+
+Here, we do something quite similar ... Go through the list, pick up the first unmarked number i, and then colour all of i's UNCOLOURED multiples i.
+
+It's important that we check i's multiple is not already coloured ... Otherwise we will be colouring every number with it's largest prime factor, not smallest.
+Now we can access least prime factor of n in O(1) time.
+
+Precomputation is done in O(n^2) ... Query answered in O(1).
+
+------------------------------------------------
+
+Using cin and cout caused me a TLE ... Had to use good old fashioned printf and scanf to pass the test case.
+
+-------------------------------------------------------------------------
+
+void precompute_prime_factors()
+{
+    for(int i = 2; i <= 1e6; i++)
+    {
+        if(least_prime_factor[i] == UNMARKED) //It is unmarked
+        {
+            for(int j = i; j <= 1e6; j += i)
+            {
+                if(least_prime_factor[j] == UNMARKED)
+                    least_prime_factor[j] = i;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int no_of_products;
+    cin >> no_of_products;
+
+    precompute_prime_factors();
+
+    while(no_of_products--)
+    {
+        int price;
+        cin >> price;
+
+        cout << price - least_prime_factor[price] << "\n";
+    }
+
+    return 0;
+}
+
+--------------------------------------------------------------------

@@ -1,0 +1,24 @@
+This was tricky. I couldn't figure it out.
+
+I tried searching for digital sums, complement digit sums, alternate bases (8, 7, 9 and binary) ... numbers with the same binary prefix, output a composite number if 
+inputed a composite number. I just couldn't solve it.
+
+Then, I looked at the answer and it was the sum of the proper divisors of the number ! 
+
+I coded a O(root(n)) solution.
+
+Important to handle the case n = 1 and perfect square n ... Otherwise no bugs 
+
+------------------------------------------------------
+
+    int number, sum = 1;
+    cin >> number;
+
+    if(number == 1)
+        sum = 0;
+
+    for(int divisor = 2; divisor*divisor <= number; divisor++)
+        if(number%divisor == 0)
+            sum += (divisor*divisor == number ? divisor : divisor + number/divisor);
+
+    cout << sum << "\n";

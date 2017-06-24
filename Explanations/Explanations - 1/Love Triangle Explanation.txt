@@ -1,0 +1,31 @@
+Couldn't solve this one ... Thought it had something to do with palindromes ... 
+
+But, turns out this problem requires a base conversion. lol. I had thought of the idea for another problem but didn't apply it here.
+Base 10 to base 9.
+
+So, how do we convert in between two number bases ?
+
+Take num%new base ... num = num/ new base ... Collect all the remainders and write them from right to left. 
+We don't really use a string ... So multiply by 10 to move to the next position.
+
+-------------------------------------------------
+
+long long base_9(long long num)
+{
+    if(num < 9)
+        return num;
+    else
+        return num%9 + 10*base_9(num/9);//Multiply by 10 to shift significant digits
+}
+
+int main()
+{
+    long long number;
+
+    while(scanf("%lld", &number) != EOF)
+    {
+        printf("%lld\n", base_9(number));
+    }
+
+    return 0;
+}

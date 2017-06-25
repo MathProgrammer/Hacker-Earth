@@ -10,6 +10,13 @@ So, the question can be reframed to say ... Find all numbers K which divide all 
 
 In other words, Find the GCD of the difference array and print all it's factors in sorted order.
 
+(However, we are only checking consecutive differences and not all n(choose)2 differences.... Turns out, it is sufficient).
+
+The GCD of the difference array leaves the same remainder with every number because it divides the differences of all numbers.
+If there was a number greater than the GCD that left the same remainder with everything, then there would be a number greater than GCD that divided all the differences.
+This is a contradiction.
+
+
 -----------------------------------------
 
 1. Construct an absolute difference array

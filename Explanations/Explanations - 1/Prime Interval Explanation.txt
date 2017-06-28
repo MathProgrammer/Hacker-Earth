@@ -1,0 +1,44 @@
+Print all primes in between L and R.
+
+---------------------------------
+
+Simple Sieve will do ... Precompute all the vectors till 1e4 and then print in the interval.
+
+void precompute_primes()
+{
+    vector <int> is_prime(1e4 + 11, true);
+
+    for(int i = 2; i <= 1e4 + 10; i++)
+    {
+        if(is_prime[i])
+        {
+            for(int multiple = 2*i; multiple <= 1e4 + 10; multiple +=i)
+            {
+                is_prime[multiple] = false;
+            }
+            prime.push_back(i);
+        }
+
+    }
+}
+
+int main()
+{
+    int left, right;
+    scanf("%d %d", &left, &right);
+
+    precompute_primes();
+
+    int i = 0;
+    while(prime[i] < left)
+        i++;
+
+    for(; prime[i] <= right; i++)
+    {
+        printf("%d ",prime[i]);
+    }
+    return 0;
+}
+
+Vector was giving a wrong answer in the border case ... so I just padded it and put some extra primes. After i gets incremented after the last prime ... undefined behaviour
+is caused. One solution is to write prime[i] != prime.back() ... But I just padded it with an extra prime so that there will only be one condition.

@@ -1,0 +1,26 @@
+This reminded me of a Codeforces which required invoking Goldbach's conjecture (which is a theorem in the given range) and use the existence without actually finding the 
+primes.
+
+I found out what was wrong ... Goldbach conjecture is for all even numbers GREATER than 2...
+
+So, the only time Arjit wins is when weight = 2 ... Overlooked this...
+
+Fixed this and got AC.
+
+------------------------------------------
+
+int main()
+{
+    int no_of_cakes;
+    scanf("%d", &no_of_cakes);
+
+    while(no_of_cakes--)
+    {
+        int weight;
+        scanf("%d", &weight);
+
+        printf(weight == 2 ?  "Arjit\n": "Deepa\n");
+    }
+
+    return 0;
+}

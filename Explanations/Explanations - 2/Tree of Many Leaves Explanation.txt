@@ -1,0 +1,28 @@
+This question is very interesting and a disguised form of asking what the bitwise XOR of all numbers are...
+
+Initially - 
+
+XOR(a, b) XOR(c, d) XOR(e, f) XOR(g, h)
+
+XOR(a, b, c, d) XOR(e, f, g, h)
+
+XOR(a, b, c, d, e, f, g, h) - Root value.
+
+This is because XOR obeys the property - XOR(x, XOR(y, z) ) = XOR(x, y, z)
+
+---------------------------------------------------------------
+
+void solve()
+{
+    int no_of_leaves, leaf_i;
+    scanf("%d", &no_of_leaves);
+
+    int root = 0;
+    for(int i = 1; i <= no_of_leaves; i++)
+    {
+        scanf("%d", &leaf_i);
+        root = root^leaf_i;
+    }
+
+    printf("%d\n",root);
+}

@@ -1,0 +1,47 @@
+There is a grid of mxn ... Alice and Bob put in numbers in cell. Bob wins if the XOR of any ONE row is 0. Alice wins otherwise.
+
+---------------------------------------------------------------
+
+First observation - 
+
+Let's solve this question for a 1xn grid. Alice writes a number, Bob repeats the same number.
+
+If N is even, Bob writes the last number and wins !
+
+If N is odd, Alice writes the last number and wins.
+
+Second observation - 
+
+Let's say there are an even number of rows and an odd number of columns. We already know Bob wins if columns is even.
+
+ Alice puts in the first number in some row ... Bob puts in the first number in some other cell. Bob repeats this till Alice puts in the second number of some row.
+(She has to do this because there are an even number of rows).
+
+Now that row where Alice has made 2 entries - a and b. Bob writes XOR(a, b) in the third cell and now will be the second player on an even number of cells on that row.
+
+If both the number of rows and columns is odd, then Alice can ensure she puts in the last number of every row and will win.
+
+------------------
+
+So, I got till here ... But I missed a very important border case and was getting the Wrong Answer ... Then, I got it.
+
+Let's say there is 1 column and any number of rows ... Alice puts in any number in the first row... Bob puts in 0 in any other row and wins the game !
+
+--------------------------------
+
+Bob wins if - 
+
+1. Number of rows is odd or,
+2. Number of columns is odd or,
+3. There is 1 column, and any number of rows > 1. [Important for rows to be > 1 ... Missed this at first]
+
+-----------------------------------------------------------------------------
+
+void solve()
+{
+    int no_of_rows, no_of_columns;
+    scanf("%d %d", &no_of_rows, &no_of_columns);
+    
+    printf( no_of_rows%2 == 0 || no_of_columns%2 == 0 || (no_of_columns == 1 && no_of_rows > 1) ? "Bob\n" : "Alice\n");
+}
+

@@ -1,0 +1,62 @@
+The minimum occurs when everybody wins half of their matches. 
+This is n times (n-1)/2 squared.
+
+Notice that a + b + c is fixed and we need to maximise a^2 + b^2 + c^2.
+Cauchy's inequality can be used for a proof.
+
+The maximum occurs when one person wins all their matches, next wins n-1 matches, next n-2 and so on.
+This is the sum of the first n-1 squares.
+
+---------------------------------------------------------
+
+Coming up with that answer is only half of the solution. It's important to do that in a way that overflow doesn't occur.
+
+Now, it isn't possible to write ans = n*(n - 1)*(2n - 1)/6 at one go because the numerator can be 1e27 ... causing overflow.
+
+One way to evaluate the numerator is ...ans =  n*(n - 1) % MOD, ans = ans*(2n - 1) %MOD
+
+This ensures the answer at the first step is 1e9 x 1e9 .. Second step is 1e9 x 1e9 ... Answer is never more than 1e18.
+
+I did this and explicit typecasting but I was getting a wrong answer ... i overlooked the fact that after performing these modular operations .... ans may not be a multiple
+of 6 anymore.
+
+for 15 x 5 = 75 is a multiple of 3 ... but (15 x 5) mod 71 is no longer a multiple of 3.
+
+So, here you have to use the idea of modular inverses ... An inverse of x is y if x.y = 1 (mod n) ... Dividing a number with x is equivalent to mulitplying with y.
+
+And also use Fermat's Little Theorem
+
+a^{p - 1} = 1 (mod p), if p is a prime 
+
+Multiplying both sides by a^{-1}, we get, 
+
+a^{p - 2} = a^{-1} ( mod p).
+
+----------------------------------------
+
+Use modular exponentiation to get the answer. Multiply by 6 inverse. Also be careful answer is never more than 1e18 at any step.
+
+-------------------------------------------------------------
+
+void solve()
+{
+    const int MOD = 1e9 + 7;
+    long long maximum, minimum;
+    int no_of_players;
+    scanf("%d", &no_of_players);
+    
+    //Max = sum of first n-1 squares ... Write it in a form to avoid overflow
+    long long six_inverse = power(6, MOD - 2, MOD); 
+    maximum =  (no_of_players - 1)*1LL*(no_of_players) %MOD;
+    maximum = ( maximum*(2LL*no_of_players - 1) ) %MOD;
+    maximum = ( maximum*six_inverse) %MOD;
+    
+    
+    int no_of_matches = no_of_players - 1; //Play everyone but yourself.
+    int wins = no_of_matches/2; //Everyone wins half their matches
+    long long wins_squared = (wins*1LL*wins) % MOD;
+    
+    minimum = (no_of_players*wins_squared) % MOD;
+    
+    printf("%lld %lld\n",minimum, maximum);
+}

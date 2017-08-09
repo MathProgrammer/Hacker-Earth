@@ -1,0 +1,63 @@
+
+-----------------------------------------------
+
+Let f(i) be the maximum time that can be saved if we start from slip i ... (And ignore all slips before it).
+
+Now, f(n) = max(0, A[n])
+
+For every slip, we have two options - we either choose it or we don't.
+If we don't choose it then the maximum time starting from f(i) = f(i + 1) ... Since we didn't consider i-th slip.
+
+If we do choose it then, f(i) = A[i] + f(i + k + 1) ... Because we cannot choose any of the next k slips.
+
+f(i) = max{f(i + 1), A[i] + f(i + k + 1)}
+
+Answer is f(1).
+
+f(n) = max{0, A[i]}
+f(i) = max{A[i], f(i + 1)}, if (i + k >= n) i.e. if we pick slip i we cannot pick another slip as it will be beyond the range.
+  
+     = max{A[i] + f(i + k + 1), f(i + 1)} ... First option represents choosing i-th slip, second one not choosing i-th slip.
+
+-------------------------------------------
+
+#include <cstdio>
+#include <vector>
+
+#define max(a, b) (a > b ? a : b)
+using namespace std;
+
+void solve()
+{
+    int no_of_slips, minimum_gap;
+    scanf("%d %d", &no_of_slips, &minimum_gap);
+
+    vector <int> time_slip(no_of_slips + 1);
+    for(int i = 1; i <= no_of_slips; i++)
+        scanf("%d", &time_slip[i]);
+
+    vector <long long> maximum_time_starting_from(no_of_slips, 0);
+    for(int slip_i = no_of_slips; slip_i >= 1; slip_i--)
+    {
+        if(slip_i + minimum_gap >= no_of_slips)
+        {
+            if(slip_i == no_of_slips)
+                maximum_time_starting_from[slip_i] = max(0, time_slip[slip_i]);
+            else
+                maximum_time_starting_from[slip_i] = max(maximum_time_starting_from[slip_i + 1],
+                                                            time_slip[slip_i]);
+        }
+        else
+        {
+            maximum_time_starting_from[slip_i] = max(maximum_time_starting_from[slip_i + 1],
+                    time_slip[slip_i] + maximum_time_starting_from[slip_i + minimum_gap + 1]);
+        }
+    }
+
+    printf("%lld\n", maximum_time_starting_from[1]);
+}
+
+
+
+
+

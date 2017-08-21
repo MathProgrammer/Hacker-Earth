@@ -1,0 +1,59 @@
+
+--------------------------------------
+
+Maintain a boolean vector is_palindrome[i][j], that is true if the string in between i and j is a palindrome.
+
+is_palindrome[i][i] = true,
+is_palindrome[i][j] = true if , is_palindrome[i + 1][j - 1] = true, or if i + 1 = j (If length = 2).
+
+Notice to build f(i, j), we need f(i + 1, j - 1) ... So it is not possible to build this from the bottom up by either increasing i or j.
+
+TO build it from the bottom up, we build it by iterating over length. That way, we will always have f(i + 1, j - 1) to evaluate f(i, j)
+
+Length = 2 to n.
+	start = 0, end = start + (length - 1)
+	end < length
+	
+	if(s[start] == s[end])
+		if(length == 2 or is_palindrome[start + 1][end - 1])
+			is_palindrome[start][end] = true
+
+---------------------------------------------
+
+int main()
+{
+    char string[MAX_LENGTH];
+    scanf("%s", string);
+
+    typedef vector <int> v_int;
+    vector <v_int> is_palindrome(MAX_LENGTH, v_int(MAX_LENGTH, false));
+
+    int no_of_palindromic_substrings = 0;
+
+    for(int i = 0; string[i] != '\0'; i++)
+    {
+        is_palindrome[i][i] = true;
+        no_of_palindromic_substrings++;
+    }
+
+    int string_length = strlen(string);
+    for(int length = 2; length <= string_length; length++)
+    {
+        int start = 0, end = start + (length - 1);
+        for(;end < string_length; start++, end++)
+        {
+            if(string[start] == string[end])
+            {
+                if(start + 1 == end || is_palindrome[start + 1][end - 1])
+                {
+                    is_palindrome[start][end] = true;
+                    no_of_palindromic_substrings++;
+                }
+            }
+        }
+    }
+
+    printf("%d\n", no_of_palindromic_substrings);
+    return 0;
+}
+

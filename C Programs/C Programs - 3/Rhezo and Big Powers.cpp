@@ -19,7 +19,7 @@ long long power_mod(int x, int power, int mod)
     return result;
 }
 
-long long get_remainder(char exponent[], int mod)
+int get_remainder(char exponent[], int mod)
 {
     int remainder = 0;
     for(int i = 0; exponent[i] != '\0'; i++)

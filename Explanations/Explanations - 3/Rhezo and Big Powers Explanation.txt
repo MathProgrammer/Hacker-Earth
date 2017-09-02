@@ -1,0 +1,72 @@
+
+Evaluate A^B (mod 1e9 + 7)
+
+A < 1e9
+B can have 10 thousand digits.
+
+--------------------------------------------
+
+Fermat-Euler theorem states that
+a^phi(n) = 1 (mod n)
+a^(p - 1) = 1 (mod p)
+
+We only need the value of B mod p-1.
+
+Treat the string B as a polynomial ...
+Evaluate it using Horner's Method.
+
+Initially, B = 0,
+
+for i = 0 to n-1
+	B = B*10 + digit[i]
+
+This ensures the first coefficient is multiplied by 10 n-1 times, the second n-2 times and the last coefficient is not multiplied by 10.
+
+Just evaluate this polynomial mod 1e9 + 6 ...
+
+now, we will get a number less than 1e9 + 7 in one linear sweep.
+
+After that use binary exponentiation.
+
+-----------------------------------------------------------
+
+long long power_mod(int x, int power, int mod)
+{
+    long long result = 1LL, y = x;
+
+    while(power > 0)
+    {
+        if(power%2 == 1)
+            result = (result*y)%mod;
+
+        y = (y*y)%mod;
+        power = power >> 1;
+    }
+
+    return result;
+}
+
+long long get_remainder(char exponent[], int mod)
+{
+    int remainder = 0;
+    for(int i = 0; exponent[i] != '\0'; i++)
+    {
+        remainder = (remainder*10LL + exponent[i] - '0')%mod;
+    }
+    return remainder;
+}
+
+int main()
+{
+    int a;
+    char exponent[MAX_SIZE];
+    scanf("%d %s", &a, exponent);
+
+    const int MOD = 1e9 + 7;
+    int net_exponent = get_remainder(exponent, MOD - 1);
+
+    long long answer = power_mod(a, net_exponent, MOD);
+    printf("%lld\n", answer);
+
+    return 0;
+}

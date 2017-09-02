@@ -1,0 +1,84 @@
+Saraff is planning to open a general store in his locality. He is planning to buy a weight balance and some weights to measure weights in the store.
+
+There is a single store Pahi's Weight Store which sells balance and weights in Saraff's country. Pahi's store has K pieces of each positive integral weight and buying all 
+K pieces of a weight costs 
+1 Rupee. For each integral weight, you can either not take it, or take K pieces of it and pay 1 Rupee.
+
+Saraff wants to find what minimum amount of money he needs to spend so that he is able to measure all the positive integral weights up to N
+To measure a weight X, he needs some pieces such that the sum of their values equals X.
+
+-------------------------------------------------
+
+N can go up to 1e18 ... This gave me the hint that it's either an O(1) or an O(log n) answer. O(1) isn't possible. 
+
+I thought a while and realised that if k = 1, then the answer is the number of digits in binary representation of N. 
+
+I couldn't find a way to answer the question if k > 1. 
+
+I thought that if k = 3, then you could use 3 1s ... Instead of one 1 and one 2. 
+
+Buy 3 2s, instead of buying 1 2 and 1 4,
+
+But then what if k = 5 ? and so on. It was getting complicated.
+
+My initial answer turned out to be correct. Just needed to tweak it a little. 
+
+We are allowed to use at most k of any digit. 
+This itself is a hint ... WE need to write the number N is base (k + 1) !
+If we write N in base (K + 1), we will never need more than k of any of the digits we buy. 
+
+This is a more powerful generalisation. Writing a number N in base (K + 1) is automatically a greedy algorithm. We can't use lesser digits, with each digit used
+at most k times. 
+
+This completes the proof - 1. That it is minimum. 2. Each digit is used at most k times.
+
+We can reach any number from 1 till k, by buying k 1s.
+
+(k + 1) is the first number we can't reach. So we buy (k + 1) ...
+
+Now we can reach any number up to k(k + 1) + k =k^2 + 2k
+
+with these two digits. 
+
+So, we now buy (k^2 + 2k + 1) = (k + 1)^2
+
+Now, we can reach any digit up to ... k(k + 1)^2 + k^2 + 2k = k(k + 1)^2 + k^2 + 2k + 1 - 1 = (k + 1)^2.(k + 1) - 1 = (k + 1)^3 - 1
+So, we now buy (k + 1)^3.
+
+In general, with i digits, we can reach any digit up to
+
+(k + 1)^i - 1.
+
+Then if we use digit j = i + 1,
+
+k(k + 1)^i + (k + 1)^i - 1 
+= (k+1)^i.(k + 1) - 1
+= (k + 1)^(i + 1) - 1
+
+This completes a proof by mathematical induction that every digit is included. 
+
+Also, this is a more natural way of discovering the answer by yourself. 
+We have to buy 1.... Otherwise, we can never make 1.
+After reaching 1, we need to reach k+1, ... Then we need to reach (k + 1)^2 ...
+
+And in general, we can reach anywhere upto (k + 1)^i - 1, and we need to jump to (k + 1)^(i + 1).
+
+Now, to get this, we write N in base (k + 1). which is log N, in the base (k + 1).
+
+-------------------------------------------------
+
+void solve()
+{
+    long long number;
+    int k;
+    scanf("%d %lld", &k, &number);
+
+    int no_of_digits_n_in_base_k_plus_1 = 0;
+
+    while(number > 0)
+    {
+        number = number/(k + 1);
+        no_of_digits_n_in_base_k_plus_1++;
+    }
+    printf("%d\n", no_of_digits_n_in_base_k_plus_1);
+}

@@ -1,0 +1,46 @@
+#include <cstdio>
+#include <vector>
+using namespace std;
+
+vector <int> is_prime(500, true);
+
+void precompute_primes()
+{
+    is_prime[0] = is_prime[1] = false;
+
+    for(int i = 2; i <= 500; i++)
+    {
+        if(is_prime[i])
+        {
+            for(int multiple = i*i; multiple <= 500; multiple += i)
+            {
+                is_prime[multiple] = false;
+            }
+        }
+    }
+}
+
+int main()
+{
+    precompute_primes();
+
+    int order_of_matrix;
+    scanf("%d", &order_of_matrix);
+
+    typedef vector <int> v_int;
+    vector <v_int> grid(order_of_matrix + 2, v_int(order_of_matrix + 2, 0));
+
+    for(int row = 1; row <= order_of_matrix; row++)
+        for(int column = 1; column <= order_of_matrix; column++)
+            scanf("%d", &grid[row][column]);
+
+    int cells_surrounded_by_primes = 0;
+    for(int row = 1; row <= order_of_matrix; row++)
+        for(int column = 1; column <= order_of_matrix; column++)
+            cells_surrounded_by_primes += is_prime[grid[row][column - 1] + grid[row][column + 1] +
+                                                    grid[row - 1][column] + grid[row + 1][column]];
+
+    printf("%d\n", cells_surrounded_by_primes);
+    return 0;
+}
+

@@ -1,0 +1,42 @@
+Print the size of the smallest prefix array P, that has to be removed from Array A such that the gcd of
+
+A - P is maximised.
+
+-----------------------------------------------
+
+Firstly, gcd(a, b) <= min(a, b) 
+
+And gcd(a, b, c) <= gcd(a, b)
+
+When we include a new number into the gcd of a set of numbers, then the gcd must stay the same or decrease. It cannot increase.
+
+Secondly, the largest suffix gcd belongs to the last element i.e. itself.
+
+Search for the first i from the end, such that gcd(suffix(i)) != A[n], and remove all elements from 1 to i.
+
+------------------------------------------
+
+int main()
+{
+    int no_of_numbers;
+    scanf("%d", &no_of_numbers);
+
+    vector <int> number(no_of_numbers + 1, 0);
+    for(int i = 1; i <= no_of_numbers; i++)
+        scanf("%d", &number[i]);
+
+    int suffix_gcd = number[no_of_numbers], removable_prefix_length = 0;
+    for(int i = no_of_numbers - 1; i >= 1; i--)
+    {
+        suffix_gcd = gcd(suffix_gcd, number[i]);
+
+        if(suffix_gcd != number[no_of_numbers])
+        {
+            removable_prefix_length = i;
+            break;
+        }
+    }
+
+    printf("%d\n", removable_prefix_length);
+    return 0;
+}

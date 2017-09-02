@@ -1,0 +1,56 @@
+An Array A is given, and a sum S = 0.
+
+1. Choose the last element of A, delete it and add it to S
+2. Choose the last two elements of A, delete them and add it to S
+3. Reverse the array and apply operation 1
+4. Reverse the array and apply operation 2
+
+Maximise S using these four operations.
+
+---------------------------------------
+
+The reversing operation is not terribly important. 
+
+For example, if we want to add the sum of the first two elements, a and b to the sum,
+
+Instead of reversing we can wait till a and b are the last elements of the array.
+
+Since addition is commutative, it does not matter if we add ab in step 2 or step 10.
+
+In general, if we reverse the array and add an element x to the sum, we can also add the same x by waiting till x is the last element of the array.
+
+The problem may be solved with the first two operations alone. 
+
+Notice that each element is either added by itself or multiplied with a neighbouring element.
+
+Let f(i) denote the maximum sum with the first i elements.
+
+Then, f(1) = A[1]
+      f(2) = A[1]*A[2]
+      f(i) = max{A[i] + f(i - 1), A[i]*A[i-1] + f(i - 2)}
+
+--------------------------------------------------
+
+int main()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> element(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &element[i]);
+
+    vector <long long> max_sum_till(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(i == 1)
+            max_sum_till[i] = element[i];
+        else if(i == 2)
+            max_sum_till[i] = element[i]*1LL*element[i - 1];
+        else
+            max_sum_till[i] = max(element[i] + max_sum_till[i - 1], element[i]*1LL*element[i - 1] + max_sum_till[i - 2]);
+    }
+
+    printf("%lld\n", max_sum_till[no_of_elements]);
+    return 0;
+}

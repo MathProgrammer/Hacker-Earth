@@ -1,0 +1,42 @@
+
+Writing out a few terms of the series, we can see that the numbers are the odd-indexed triangular numbers.
+T(N) = (2n - 1)(2n)/2 = (2n - 1).n
+
+T(n - 1) = (2n - 3).(n - 1)
+T(n) = (2n - 1).n
+T(n + 1) = (2n + 1).(n + 1)
+
+{T(n - 1) + T(n + 1)}/2 - 2 = {(2n - 1 - 2).(n - 1) + (2n - 1 + 2).(n + 1)}/2 - 1
+
+= (2n - 1)(n - 1 + n + 1)/2 - 2 + 2
+= (2n - 1)(2n)/2 - 2 + 2
+= (2n - 1)(n) 
+
+We see that these terms fulfil the condition specified.
+
+----------------------------------------
+
+void solve()
+{
+    long long n;
+    const int mod = 1e9 + 7;
+
+    scanf("%lld", &n);
+    n %= mod;
+
+    long long answer = n*(2*n - 1);
+    answer %= mod;
+
+    printf("%lld\n", answer);
+}
+
+int main()
+{
+    int no_of_test_cases;
+    scanf("%d", &no_of_test_cases);
+
+    while(no_of_test_cases--)
+        solve();
+
+    return 0;
+}

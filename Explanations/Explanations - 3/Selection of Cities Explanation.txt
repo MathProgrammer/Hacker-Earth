@@ -1,0 +1,43 @@
+
+---------------------------------------
+
+There are choose(n, 1) ways of choosing 1 city.
+Choose(n, 2) ways of choosing 2 cities.
+
+sum[choose(n, i)] = 2^n - 1
+
+This can be done either by noticing that for each path we have two choices for every city - either we select it, or we don't. 
+WE don't count the combination where no city is selected so we subtract 1.
+
+Another way of visualising the same thing is that we can plug in x = 1, in (1 + x)^n -1 to get the required combination sum.
+
+Use binary exponentiation to find 2^n. Don't subtract 1 directly as the answer may become negative. Instead add (mod - 1).
+
+-------------------------------------------------
+long long power_mod(int x, long long power, int mod)
+{
+    long long result = 1, y = x;
+
+    while(power > 0)
+    {
+        if(power%2 == 1)
+            result = (result*y)%mod;
+
+        y = (y*y)%mod;
+        power = power >> 1;
+    }
+
+    return result;
+}
+
+void solve()
+{
+    long long no_of_cities;
+    scanf("%lld", &no_of_cities);
+
+    const int mod = 1e9 + 7;
+    long long no_of_choices = power_mod(2, no_of_cities, mod) + (mod - 1); //Adding -1
+    no_of_choices %= mod;
+
+    printf("%lld\n", no_of_choices);
+}

@@ -1,0 +1,75 @@
+
+
+---------------------------------------------
+
+Find the maximum exponent of each prime in the list of numbers and multiply all of them together.
+
+For example, some number may have 2^3, some number may have 3^2, some may have 11, 13
+
+Multiply the highest exponent of each prime that occurs in any number in the list.
+
+---------------------------------------------------------------------
+
+inline void factorise(int n, vector <int> &highest_exponent)
+{
+    for(int i = 2; i*i <=n; i++)
+    {
+        if(n%i == 0)
+        {
+            int exponent = 0;
+
+            while(n%i == 0)
+            {
+                n = n/i;
+                exponent++;
+            }
+
+            highest_exponent[i] = max(highest_exponent[i], exponent);
+        }
+    }
+
+    if(n > 1)
+        highest_exponent[n] = max(highest_exponent[n], 1);
+}
+
+inline int power(int n, int power)
+{
+    int result = 1, y = n;
+
+    while(power > 0)
+    {
+        if(power%2 == 1)
+            result = result*y;
+
+        y = y*y;
+        power = power >> 1;
+    }
+
+    return result;
+}
+
+void solve()
+{
+    int no_of_numbers;
+    scanf("%d", &no_of_numbers);
+
+    const int MAX_NUM = 48;
+    vector <int> highest_exponent(MAX_NUM + 1, 0);
+
+    for(int i = 1; i <= no_of_numbers; i++)
+    {
+        int number_i;
+        scanf("%d", &number_i);
+
+        factorise(number_i, highest_exponent);
+    }
+
+    unsigned long long product = 1;
+
+    for(int i = 2; i <= MAX_NUM; i++)
+    {
+        product = product*power(i, highest_exponent[i]);
+    }
+
+    printf("%llu\n", product);
+}

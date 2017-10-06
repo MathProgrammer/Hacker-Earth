@@ -1,0 +1,63 @@
+An old planet called Alpha has been found but it is destructed completely. Archaeologists after expedition found out a map that depicts all the buildings that were in Alpha.
+ In the map following facts were stated:
+
+Buildings were made of the identical bricks and all the bricks were equal sized.
+All the buildings and bricks were 2D rectangles of some height and equal width.
+A building is formed by putting bricks one on the another. The height of the building is the sum of heights of bricks. None of the bricks used are ever broken or rotated.
+
+
+------------------------------------------------
+
+There are 1e5 queries. Going through the entire array and finding the number of multiples of n for each query - O(Q.N) will not pass.
+
+Instead factorise each integer of the list and keep track of all it's divisors.
+
+So input is O(N. root(A_i)). Query answered in O(1)
+
+-------------------------------------------------
+
+void get_multiples(int n, vector <int> &no_of_multiples)
+{
+    for(int i = 1; i*i <= n; i++)
+    {
+        if(n%i == 0)
+        {
+            if(i*i == n)
+                no_of_multiples[i]++;
+            else
+            {
+                no_of_multiples[i]++;
+                no_of_multiples[n/i]++;
+            }
+        }
+    }
+}
+
+int main()
+{
+    const int LIMIT = 1e5;
+    vector <int> no_of_multiples(LIMIT + 1, 0);
+
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element_i;
+        scanf("%d", &element_i);
+
+        get_multiples(element_i, no_of_multiples);
+    }
+
+    int no_of_queries;
+    scanf("%d", &no_of_queries);
+
+    while(no_of_queries--)
+    {
+        int n;
+        scanf("%d", &n);
+        printf("%d\n", no_of_multiples[n]);
+    }
+
+    return 0;
+}

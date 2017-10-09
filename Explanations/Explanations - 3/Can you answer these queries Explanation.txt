@@ -1,0 +1,35 @@
+
+
+Maintain a segment tree to keep track of maximum element and a normal prefix sum array.
+
+void build(int node, int left, int right)
+{
+    if(left == right)
+    {
+        max_tree[node] = element[left];
+        return;
+    }
+
+    int mid = (left + right) >> 1;
+
+    build(2*node, left, mid);
+    build(2*node + 1, mid + 1, right);
+
+    max_tree[node] = max(max_tree[2*node], max_tree[2*node + 1]);
+}
+
+int get_max(int node, int left, int right, int query_left, int query_right)
+{
+    if(query_left > right || query_right < left)
+        return 0;
+
+    if(query_left <= left && right <= query_right)
+        return max_tree[node];
+
+    int mid = (left + right) >> 1;
+
+    int left_max = get_max(2*node, left, mid, query_left, query_right);
+    int right_max = get_max(2*node + 1, mid + 1, right, query_left, query_right);
+
+    return max(left_max, right_max);
+}

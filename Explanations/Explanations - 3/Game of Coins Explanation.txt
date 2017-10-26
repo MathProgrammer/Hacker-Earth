@@ -1,0 +1,35 @@
+
+--------------------------------------------------------
+
+If there are an odd number of coins, Alice takes the middle coin. If even, Alice takes the middle two coins.
+
+After that Alice copies Bob's moves onto the other pile and ensures there are two symmetric piles.
+
+#include <cstdio>
+
+
+int main()
+
+{
+    int no_of_test_cases;
+    
+scanf("%d", &no_of_test_cases);
+    
+    
+while(no_of_test_cases--)
+    
+{
+        
+int no_of_coins;
+        
+scanf("%d", &no_of_coins);
+        
+        
+printf("Alice\n");
+    
+}
+    
+    
+return 0;
+
+}

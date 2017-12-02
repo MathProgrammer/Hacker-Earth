@@ -1,0 +1,52 @@
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+int get_odd_digit_sum(int n)
+{
+    int sum = 0;
+
+    while(n > 0)
+    {
+        int digit = n%10;
+        sum += digit*(digit%2);
+
+        n = n/10;
+    }
+
+    return sum;
+}
+
+void precompute(vector <int> &answer, int LIMIT)
+{
+    for(int i = 1; i <= LIMIT; i++)
+    {
+        int odd_digit_sum = get_odd_digit_sum(i);
+
+        for(int multiple = i; multiple <= LIMIT; multiple += i)
+        {
+            answer[multiple] += odd_digit_sum;
+        }
+    }
+}
+
+int main()
+{
+    const int LIMIT = 1e6;
+    vector <int> answer(LIMIT + 1, 0);
+    precompute(answer, LIMIT);
+
+    int no_of_queries;
+    scanf("%d", &no_of_queries);
+
+    while(no_of_queries--)
+    {
+        int n;
+        scanf("%d", &n);
+
+        printf("%d\n", answer[n]);
+    }
+
+    return 0;
+}

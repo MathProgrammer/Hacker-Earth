@@ -1,0 +1,46 @@
+1. If every pair of elements in the solution vector has their difference as a multiple of m, they must have the same remainder with m.
+
+2. Now, the question is ... of all modulo of m, which one has the highest frequency in the input array ?
+
+3. If 2 modulo have the same frequency, break the tie with the modulo that has the smallest minimum element
+
+I did it in O(n log n) time because m <= 1e9 and maps had to be used.
+
+int main()
+{
+    int no_of_elements, m;
+    scanf("%d %d", &no_of_elements, &m);
+
+    vector <int> element(no_of_elements + 1);
+    map <int, int> frequency;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        scanf("%d", &element[i]);
+
+        frequency[element[i]%m]++;
+    }
+
+    int max_frequency = 0, answer_modulus;
+
+    sort(all(element));
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(frequency[element[i]%m] > max_frequency)
+        {
+            max_frequency = frequency[element[i]%m];
+            answer_modulus = element[i]%m;
+        }
+    }
+
+    vector <int> answer;
+    for(int i = 1; i <= no_of_elements; i++)
+        if(element[i]%m == answer_modulus)
+            answer.push_back(element[i]);
+
+
+    printf("%u\n", answer.size());
+    for(int i = 0; i < answer.size(); i++)
+        printf("%d ", answer[i]);
+
+    return 0;
+}

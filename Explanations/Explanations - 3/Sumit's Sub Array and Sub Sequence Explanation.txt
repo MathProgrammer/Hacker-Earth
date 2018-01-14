@@ -1,0 +1,45 @@
+
+For all sub array sums, notice that every sub array ends at a particular index i.
+
+So, it is enough for us to find the maximum subarray sum ending at position i and then check for each i. This is O(n^2)
+
+We can do better. For every i, there are two options - Either it stands alone or it doesn't.
+
+If it stands alone, it is A[i] ... Else we must add the maximum sum ending at i - 1 to it.
+
+Initially maximum subarray sum is initialised to A[1], not 0.
+
+For all subsequence sums, the answer is the sum of all positive numbers in the array. 
+
+If the array consists of all negative numbers, the answer is the smallest negative number.
+
+------------------------------------------------------------
+
+void solve()
+{
+    int no_of_elements;
+    scanf("%d", &no_of_elements);
+
+    vector <int> A(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        scanf("%d", &A[i]);
+
+    int positive_sum = 0, smallest_negative_number = -1e5;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(A[i] > 0)
+            positive_sum += A[i];
+        else
+            smallest_negative_number = max(smallest_negative_number, A[i]);
+    }
+    int largest_sum = (positive_sum == 0 ? smallest_negative_number : positive_sum);
+
+    int largest_sum_ending_here = 0, largest_subarray_sum = A[1];
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        largest_sum_ending_here = max(A[i], A[i] + largest_sum_ending_here);
+        largest_subarray_sum = max(largest_sum_ending_here, largest_subarray_sum);
+    }
+
+    printf("%d %d\n", largest_subarray_sum, largest_sum);
+}

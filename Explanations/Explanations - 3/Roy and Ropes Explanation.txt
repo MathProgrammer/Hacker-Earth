@@ -1,0 +1,40 @@
+
+Notice that the rope will burn for L seconds regardless of what the upper and lower ropes of each section are.
+
+Also notice, that at position i, both the upper and lower ropes will be lit up for (L- i) seconds at least.
+
+1. Reduce, every upper and lower i to max(0, upper[i] - (L - i))
+2. Now, you have a bunch of independent rops of certain lengths burning together. The time it will take to burn all of them is the time it will take to burn the longest
+
+-----------------------------------------
+
+void solve()
+{
+    int length;
+    scanf("%d", &length);
+
+    vector <int> upper(length);
+    for(int i = 1; i < length; i++)
+        scanf("%d", &upper[i]);
+
+    vector <int> lower(length + 1);
+    for(int i = 1; i < length; i++)
+        scanf("%d", &lower[i]);
+
+    for(int i = length - 1; i >= 1; i--)
+    {
+        int remaining_length = length - i;
+        upper[i] = max(0, upper[i] - remaining_length);
+        lower[i] = max(0, lower[i] - remaining_length);
+    }
+
+    int extra_time = 0;
+    for(int i = 1; i < length; i++)
+    {
+        extra_time = max(extra_time, upper[i]);
+        extra_time= max(extra_time, lower[i]);
+    }
+
+    int ans = length + extra_time;
+    printf("%d\n", ans);
+}

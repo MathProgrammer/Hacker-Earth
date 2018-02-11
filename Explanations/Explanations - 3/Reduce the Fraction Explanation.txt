@@ -1,0 +1,9 @@
+Divide both numerator and denominator by GCD.
+
+void solve()
+{
+    int A, B;
+    scanf("%d %d", &A, &B);
+    
+    printf("%d/%d\n", A/gcd(A, B), B/gcd(A, B));
+}

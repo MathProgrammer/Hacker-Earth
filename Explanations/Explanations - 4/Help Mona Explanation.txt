@@ -1,0 +1,125 @@
+
+Let us see how we can solve this problem quickly. 
+
+Imagine we know how many odd numbers, there are in the range [1, ... N]. Let this number be f(N)
+
+If f(N) < K, then an answer doesn't exist clearly as there are less odd numbers than K. 
+
+Otherwise, let us divide the segment into two halfs [1, ... , N/2] [N/2 + 1 ... N]
+
+Let the odd numbers in the segments be f(Right) and f(Left)
+
+if f(Left) >= K, then the k-th odd number lies in the left segment. We may discard the right segment.
+
+if f(Left) < K, then the k-th odd number lies in the right segment. We can discard the full left segment. 
+Moreover, the k-th odd number in the range [1, ... , N] is the K - f(left) odd number in the range [N/2 + 1, ... , N]
+
+Since f(left) odd numbers occur before the range. 
+
+We have stored the information of how many odd numbers are there in the range and this has enabled us to cut the search space in half. 
+
+We keep doing this till we get a one-element range. This will be the answer. 
+
+Search space gets divided by 2 each time. So complexity of each query = O(log n)
+
+Use a segment tree to keep track of the amount of odd numbers in any range.
+
+Note - The question wasn't set well. K = 0, is an allowed input
+
+The expected output is -1, if A[1] is odd and 1 if A[1] is not odd.
+
+--------------------------------------------------
+
+void build(int n, int left, int right)
+{
+    if(left == right)
+    {
+        no_of_odd_numbers[n] = (A[left]%2 == 1);
+        return;
+    }
+
+    int mid = (left + right) >> 1;
+    build(LEFT(n), left, mid);
+    build(RIGHT(n), mid + 1, right);
+
+    no_of_odd_numbers[n] = no_of_odd_numbers[LEFT(n)] + no_of_odd_numbers[RIGHT(n)];
+}
+
+void update(int n, int left, int right, int index)
+{
+    if(right < index || index < left)
+        return;
+
+    if(left == right)
+    {
+        A[left] = (A[left]+1)%2;
+        no_of_odd_numbers[n] = (A[left]%2 == 1);
+        return;
+    }
+
+    int mid = (left + right) >> 1;
+    update(LEFT(n), left, mid, index);
+    update(RIGHT(n), mid + 1, right, index);
+
+    no_of_odd_numbers[n] = no_of_odd_numbers[LEFT(n)] + no_of_odd_numbers[RIGHT(n)];
+}
+
+int get(int n, int left, int right, int k)
+{
+    if(k == 0)
+        return (A[1]%2 == 1 ? -1 : 1);
+
+    if(no_of_odd_numbers[n] < k)
+        return -1;
+
+    if(left == right)
+        return left;
+
+    int mid = (left + right) >> 1;
+    if(no_of_odd_numbers[LEFT(n)] >= k)
+    {
+        int answer = get(LEFT(n), left, mid, k);
+        return answer;
+    }
+    else
+    {
+        int answer = get(RIGHT(n), mid + 1, right, k - no_of_odd_numbers[LEFT(n)]);
+        return answer;
+    }
+}
+
+int main()
+{
+    int no_of_elements, no_of_queries;
+    scanf("%d %d", &no_of_elements, &no_of_queries);
+
+    for(int i = 1; i <= no_of_elements; i++) scanf("%d", &A[i]);
+
+    for(int i = 1; i <= no_of_elements; i++) A[i] %= 2;
+
+    build(1, 1, no_of_elements);
+
+    while(no_of_queries--)
+    {
+        const int UPDATE = 1, GET = 2;
+        int query_type;
+
+        scanf("%d", &query_type);
+
+        if(query_type == UPDATE)
+        {
+            int index;
+            scanf("%d", &index);
+
+            update(1, 1, no_of_elements, index);
+        }
+        if(query_type == GET)
+        {
+            int k;
+            scanf("%d", &k);
+
+            int answer = get(1, 1, no_of_elements, k);
+            printf("%d\n", answer);
+        }
+    }
+}

@@ -1,0 +1,118 @@
+
+The editorial solution was quite creative. 
+
+Maintain a segment tree that keeps track of whether a segment has all 1s.
+
+If a segment has all 1s go no further and discard it. 
+
+If a segment has at least one 0, check if it is a leaf. If it is, we have found an answer as that is a 0 !
+
+If the segment is not a leaf, then apply this to it's left subtree.
+
+If no answer is left subtree, apply it in it's right subtree.
+
+(Alternatively, it could have been done storing the leftmost 0 of each segment, and oo if there is no 0. 
+
+While merging two segments, take the minimum of the two.
+
+While answering queries, if a segment is completely within the query interval, then return it's answer. 
+
+If it's partially inside, first, check it's left subtree and then it's right subtree.)
+
+I just found the segment tree of all 1's very creative and so I did it !
+
+I had some bugs - I was dividing instead of multiplying by 2 for Right and Left, didn't give memory to enough nodes, forgot to call build function in main() so 
+the segment tree wasn't getting built only (lol), forgetting to merge intervals while performing updates and forgetting to account for 1-index. 
+
+One by one, I debugged all of them.
+
+------------------------------------------------------------------------
+
+void build(int n, int left, int right)
+{
+    if(left == right)
+    {
+        all_ones[n] = (input[left] == '1');
+        return ;
+    }
+
+    int mid = (left + right) >> 1;
+    build(LEFT(n), left, mid);
+    build(RIGHT(n), mid + 1, right);
+
+    all_ones[n] = all_ones[LEFT(n)]&all_ones[RIGHT(n)];
+}
+
+void flip(int n, int left, int right, int index)
+{
+    if(right < index || left > index)
+        return;
+
+    if(left == right)
+    {
+        all_ones[n] = !(all_ones[n]);
+        return;
+    }
+
+    int mid = (left + right) >> 1;
+
+    flip(LEFT(n), left, mid, index);
+    flip(RIGHT(n), mid + 1, right, index);
+
+    all_ones[n] = all_ones[LEFT(n)]&all_ones[RIGHT(n)];
+}
+
+int get(int n, int left, int right, int query_left, int query_right)
+{
+    if(query_left > right || query_right < left || all_ones[n])
+        return NOT_POSSIBLE;
+
+    if(left == right) //Leaf and not all 1's so it has to be 0.
+        return left;
+
+    int mid = (left + right) >> 1;
+
+    int answer_in_left_subtree = get(LEFT(n), left, mid, query_left, query_right);
+
+    if(answer_in_left_subtree != NOT_POSSIBLE)
+        return answer_in_left_subtree;
+
+    int answer_in_right_subtree = get(RIGHT(n), mid + 1, right, query_left, query_right);
+
+    return answer_in_right_subtree;
+}
+
+int main()
+{
+    int length, no_of_queries;
+    scanf("%d %s %d", &length, (input + 1), &no_of_queries);
+
+    build(1, 1, length);
+
+    while(no_of_queries--)
+    {
+        const int FLIP = 1, GET = 2;
+        int query_type;
+        cin >> query_type;
+
+        if(query_type == FLIP)
+        {
+            int index;
+            cin >> index;
+
+            flip(1, 1, length, index);
+        }
+        else if(query_type == GET)
+        {
+            int left, right;
+            cin >> left >> right;
+
+            int answer = get(1, 1, length, left, right);
+            cout << answer << "\n";
+        }
+    }
+
+    return 0;
+}
+
+

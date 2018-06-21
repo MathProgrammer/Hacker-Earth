@@ -16,6 +16,21 @@ The GCD of the difference array leaves the same remainder with every number beca
 If there was a number greater than the GCD that left the same remainder with everything, then there would be a number greater than GCD that divided all the differences.
 This is a contradiction.
 
+Why are (n - 1) differences sufficient ?
+
+Let the array be A[1], A[2], A[3], ... , A[n]. 
+
+Fact - If n | a and n | b, then n | (a - b) and n | (a + b)
+
+So, notice that if we want to check if number n divides (A[x] - A[y])
+
+We can re write it as (A[x] - A[x - 1]) + (A[x - 1]  - A[x - 2]) + ... + (A[y + 1] - A[y])
+
+g divides each term of this series so g divides (A[x] - A[y]) !
+
+Why are (n - 1) differences necessary ?
+
+If we had any less differences, then we'd be leaving one element out !
 
 -----------------------------------------
 

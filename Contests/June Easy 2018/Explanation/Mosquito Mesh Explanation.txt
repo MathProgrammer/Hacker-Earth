@@ -1,0 +1,33 @@
+   Blog Link - http://qr.ae/TUp9V6
+ 
+int main()
+{
+    precompute();
+
+    int n, no_of_holes;
+    scanf("%d %d", &n, &no_of_holes);
+
+    vector <int> is_free(n + 1, true);
+    for(int i = 1; i <= no_of_holes; i++)
+    {
+        int top, size;
+        scanf("%d %d", &top, &size);
+
+        for(int j = top + 1; j < top + size ; j++)
+            is_free[j] = false;
+    }
+
+    long long no_of_paths = 0;
+
+    for(int i = 0; i <= n; i++)
+    {
+        if(is_free[i])//Square (i, i) is not in a mesh.
+        {
+            no_of_paths += square(choose(n, i));
+            no_of_paths %= MOD;
+        }
+    }
+
+    printf("%lld\n", no_of_paths);
+    return 0;
+}

@@ -1,0 +1,25 @@
+The first player wins if there is at least one even number and loses otherwise. 
+
+Proof - 
+
+If there is one even number, the first player can write it as the sum of two odd integers. 
+
+The second player must break one of the odd numbers as the sum of an odd and an even number. 
+
+The first player will again choose the even number. 
+
+The final configuration of (1, 1) - two odd numbers, can only occur after the first player's move. 
+
+----
+
+If there are only odd numbers in the beginning, then the first player is in the situation the second player was in above and loses.
+
+---
+
+void solve()
+{
+    int pile_1, pile_2;
+    cin >> pile_1 >> pile_2;
+
+    cout << (pile_1%2 == 1 && pile_2%2 == 1 ? "Jeel\n" : "Ashish\n");
+}

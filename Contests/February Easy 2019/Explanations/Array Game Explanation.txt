@@ -1,0 +1,62 @@
+Suppose i is an index with the porperty that Max{A[1, 2, ... i]} < Min{A[i + 1, ... , N]}
+
+Now, if we have broken the array at some point other than i, then the prefix maximum till i cannot increase and the suffix minimum till i cannot decrease. 
+
+
+Hence, we can break the array at i. 
+
+So, this proves that we can break the array A at every such index i. 
+
+-----
+
+How do we prove that it cannot be broken at any other index ? 
+
+If j is an index with the property that Max{A[1, ... j]} >= Min{A[j + 1, ... , N]}
+
+then 
+
+Suppose j is some position where initially P >= S. After some breaks, is it possible that P < S ?
+
+If so then it means that there is some element in the prefix, call it A_p and some element in the suffix call it A_s, such that A_p >= A_s
+
+If a break is possible at j after some other breaks then it means a break has occured between A_p and A_s. 
+
+This violates the rule. 
+
+---
+
+If there are x such indices i, there can be x moves made. The winner depends on the parity of x. 
+
+-----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> A[i];
+        
+    vector <int> max_till(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+        max_till[i] = max(max_till[i - 1], A[i]);
+        
+    vector <int> min_from(no_of_elements + 1);
+    min_from[no_of_elements] = A[no_of_elements];
+    for(int i = no_of_elements - 1; i >= 1; i--)
+        min_from[i] = min(min_from[i + 1], A[i]);
+    
+    int no_of_break_points = 0;
+    for(int i = 1; i < no_of_elements; i++)
+    {
+        no_of_break_points += (max_till[i] < min_from[i + 1]);
+    }
+    
+    cout << (no_of_break_points%2 == 0 ? "Ashish\n" : "Jeel\n");
+}
+ 
+
+
+
+

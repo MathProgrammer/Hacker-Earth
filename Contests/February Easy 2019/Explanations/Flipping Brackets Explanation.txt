@@ -1,0 +1,84 @@
+Let us treat the open brackets like +1 and the closed brackets like -1. 
+
+Now, let us maintain a prefix sum. 
+
+If we want to know the largest bracket sequence starting from i, 
+
+Now, let us check the prefix sum [i - 1], 
+
+-----------------
+
+There are 3 possibilities - 
+
+Case 1 - There is some j after i, such that S[j] < S[i]. If so, we need to find out the first such j where S[j] < S[i]. The reason is that after this point, the sequence becomes regular. 
+
+The length of the longest sequence will be [i, j - 1].
+
+How do we find the first such j ? 
+
+We will do binary search and maintain a minimum segment tree. 
+
+If min{L, mid} < S[i], then, R = mid
+
+Else, L = mid + 1
+
+int find_first_lesser(int left, int right, int key)
+{
+    while(left < right)
+    {
+        int mid = (left + right)/2;
+
+        if(minimum(1, 1, length, left, mid) >= key)
+        {
+            left = mid + 1;
+        }
+        else if(minimum(1, 1, length, left, mid) < key)
+        {
+            right = mid;
+        }
+    }
+
+    return right;
+}
+
+----------------
+
+Case 2 - There is some j after i, where S[j] = S[i - 1]. And there is no j where S[j] < S[i]. We need to look for the last such j. As [i, j] is a regular sequence.
+
+We will do binary search here too. 
+
+One thing to be careful about is that M = (L + R + 1)/2. 
+
+Since we are decreasing R, It is important that M have the extra +1 in the numerator.
+
+int find_last_equal(int left, int right, int key)
+{
+    while(left < right)
+    {
+        int mid = (left + right + 1)/2;
+
+        if(minimum(1, 1, length, mid, right) == key)
+        {
+            left = mid;
+        }
+        else if(minimum(1, 1, length, mid, right) > key)
+        {
+            right = mid - 1;
+        }
+    }
+
+    return left;
+}
+
+------------------
+
+Case 3 - There is no such j where even S[j] = S[i - 1]. This means it keeps going up. There is no regular sequence. 
+
+-----------------
+
+
+We will use lazy propagation. One thing to be careful about is when refering to S[i - 1]. 
+
+Use the segment tree and get the value of Min{i - 1, i - 1} rather than directly looking at S[i - 1] because we are using lazy propagation and it might not be using the latest value. 
+
+I made the mistake of not propagating the laziness in the update function. It is important to propagate in the update function too.

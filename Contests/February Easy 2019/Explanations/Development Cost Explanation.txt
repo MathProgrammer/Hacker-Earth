@@ -1,0 +1,78 @@
+Let f(x) represent the number of missions that are successful if x is the maximum cost allowed. 
+
+Clearly f(x) is monotonic. The higher the value of x, the more missions can be successful.
+
+We will use binary search and look for the smallest x such that f(x) = k
+
+const int oo = 1e9;
+    int left = 1, right = oo;
+    while(left < right)
+    {
+        int mid = (left + right)/2;
+
+        if(no_of_successes(mid) >= minimum_successes)
+        {
+            right = mid;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+
+-----------------
+
+Now, how do we evaluate f(x). 
+
+We will delete all squares where the value is greater than x. 
+
+We will then create a graph in between the remaining squares and draw an edge between two vertices if the vertices are side adjacent. 
+
+Then, we will check if the starting and ending point lie on the same connected component.
+
+We can do this with DFS too but I learnt DSU here. DSU is a very convenient data structure to use for this problem and it helps greatly. :)
+
+int no_of_successes(int max_cost)
+{
+    DSU dsu(rows*columns + 5);
+
+    for(int i = 1; i <= rows; i++)
+    {
+        for(int j = 1; j <= columns; j++)
+        {
+            if(grid[i][j] > max_cost)
+                continue;
+
+            for(int n = 0; n < NO_OF_NEIHBOURS; n++)
+            {
+                int next_x = i + neighbour_x[n];
+                int next_y = j + neighbour_y[n];
+
+                if(within_grid(next_x, next_y, max_cost))
+                {
+                    dsu.unite(label(i, j), label(next_x, next_y));
+                }
+            }
+        }
+    }
+
+    int successes = 0;
+    for(int i = 1; i <= no_of_queries; i++)
+    {
+        successes += (dsu.get_parent(label(start_x[i], start_y[i])) == dsu.get_parent(label(end_x[i], end_y[i])));
+    }
+
+    return successes;
+}
+
+------------------
+
+We have two dimensional points (x, y). For convenience, we will treat these points as a single integer. 
+
+We will label each point (x, y) as C(x - 1) + y, where C is the number of columns.
+
+int label(int x, int y)
+{
+    return (x - 1)*columns + y;
+}
+

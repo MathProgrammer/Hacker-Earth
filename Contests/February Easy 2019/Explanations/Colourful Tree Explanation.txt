@@ -1,0 +1,127 @@
+Here is the key observation - For a given vertex K, the furthest vertices will always be the ends of the diameter. 
+
+So, we must find the two end points of the diameter of each colour.
+
+And while answering each query, we must simply measure the distance of K with both end points of the diameter and use whichever end gives a higher answer.
+
+To answer the queries faster, we must precompute the diameter.
+
+Here is how we answer each query - 
+
+void solve()
+{
+    int k, colour;
+    cin >> k >> colour;
+
+    if(vertices_coloured[colour].size() == 0)
+    {
+        cout << "-1\n";
+    }
+    else
+    {
+        int maximum_distance = 0;
+
+        for(int i = 0; i < diameter[colour].size(); i++)
+        {
+            int v = diameter[colour][i];
+
+            maximum_distance = max(maximum_distance, distance_tree(k, v));
+        }
+
+        cout << maximum_distance << "\n";
+    }
+
+}
+
+------------
+
+How do we find the end points of a diameter in a tree ? 
+
+1. Pick a vertex u. 
+2. Find the furthest vertex from u. Let it be v. 
+3. Find the furthest vertex from v. Let it be w. 
+
+v and w are the ends of the diameter. We use two O(n) DFS's to find the diameter points. 
+
+Here since the added constraint of colour is there, we must make a seperate vector of all the vertices of one colour. 
+
+for(int i = 1; i <= no_of_vertices; i++)
+    {
+        int colour;
+
+        cin >> colour;
+
+        vertices_coloured[colour].push_back(i);
+    }
+
+---------------
+
+Here is how we precompute the diameter.
+
+void precompute_diameter()
+{
+    for(int c = 0; c < MAX_COLOURS; c++)
+    {
+        if(vertices_coloured[c].size() <= 2)
+        {
+            for(int i = 0; i < vertices_coloured[c].size(); i++)
+            {
+                int v = vertices_coloured[c][i];
+
+                diameter[c].push_back(v);
+            }
+
+            continue;
+        }
+
+        int u = vertices_coloured[c][0];
+
+        int furthest = u, furthest_distance = 0;
+
+        for(int i = 1; i < vertices_coloured[c].size(); i++)
+        {
+            int v = vertices_coloured[c][i];
+
+            if(distance_tree(u, v) > furthest_distance)
+            {
+                furthest = v;
+                furthest_distance = distance_tree(u, v);
+            }
+        }
+
+        int v = furthest;
+
+        diameter[c].push_back(v);
+
+
+        furthest = v, furthest_distance = 0;
+
+        for(int i = 0; i < vertices_coloured[c].size(); i++)
+        {
+            int w = vertices_coloured[c][i];
+
+            if(distance_tree(v, w) > furthest_distance)
+            {
+                furthest_distance = distance_tree(v, w);
+
+                furthest = w;
+            }
+        }
+
+        diameter[c].push_back(furthest);
+    }
+}
+
+--------------------
+
+Now, the only question is, how do we find the 'distance' between two vertices ? 
+
+As we have to find the distance in both the diameter function and while answering each query. 
+
+Distance(u, v) = Depth(u) + Depth(v) - 2Depth[LCA(u, v)]
+
+LCA is the Least Common Ancestor. 
+
+We must compute LCA in O(Log N) time.
+
+

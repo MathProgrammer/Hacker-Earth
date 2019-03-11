@@ -1,0 +1,80 @@
+We can solve this number by a case-by-case analysis. 
+
+We can solve each bit independently. So, let us treat A and B as one-bit numbers and solve it. 
+
+----
+
+Case 1 - A&B = 1
+
+This is only possible if both A and B are 1. 
+
+However, if this is the case then A^B = 0 and A|B = 1
+
+Other wise it is not possible. 
+
+Case 2 - A&B = 0
+
+Case 2a - A|B = 1
+
+This means that one of the bits is 1. Check if A^B = 1. 
+Otherwise it is not possible. 
+
+Case 2b - A|B = 0
+
+This means both bits are 0. Check if A&B = 0. Otherwise it is not possible.
+
+---------
+
+int main()
+{
+    LL OR, XOR, AND;
+    cin >> OR >> XOR >> AND;
+
+    LL A = 0, B = 0;
+    int possible = true;
+    const int MAX_BITS = 63;
+
+    for(int i = 0; i < MAX_BITS; i++)
+    {
+        if(is_bit_set(AND, i))
+        {
+            if(!is_bit_set(XOR, i) && is_bit_set(OR, i))
+            {
+                set_bit(A, i);
+                set_bit(B, i);
+            }
+            else
+            {
+                possible = false;
+            }
+        }
+        else
+        {
+            if(is_bit_set(XOR, i))
+            {
+                if(is_bit_set(OR, i))
+                {
+                    set_bit(A, i);
+                }
+                else
+                {
+                    possible = false;
+                }
+            }
+            else
+            {
+                if(is_bit_set(OR, i))
+                {
+                    possible = false;
+                }
+            }
+        }
+    }
+
+    if(!possible)
+        cout << "-1\n";
+    else
+        cout << A << " " << B;
+
+    return 0;
+}

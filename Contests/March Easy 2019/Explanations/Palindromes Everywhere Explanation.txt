@@ -1,0 +1,33 @@
+The answer will either be a palindrome only in A, only in B, or starting in A and ending in B. 
+
+---------
+
+Here's the missing insight that makes this problem easy ... 
+
+We will look for a string S, that occurs in A, such that Reverse(S) occurs in B. 
+
+Suppose S has length L and it starts at i in A and ends in j at B. 
+
+Then in A, S is from A[i, i + 1, ... , i + L - 1]
+
+In B, S is from B[j, j - 1, j - L + 1]
+
+Then, let P be a palindrome only in B that ends at position (j - 1). 
+
+Let Q be a palindrome only in A that starts at position (i - 1).
+
+So the answer will either be - 
+
+1. (S + P + Reverse(S))
+2. (S + Q + Reverse(S))
+
+Whichever is greater. 
+
+----------
+
+So, we need to know the length of the largest palindrome starting at every position in A and ending at every position in B first. We do this with a 2d DP.
+
+
+
+
+

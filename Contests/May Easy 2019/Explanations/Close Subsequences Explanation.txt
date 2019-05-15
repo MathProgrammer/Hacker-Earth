@@ -1,0 +1,87 @@
+The key here is to not only maintain the number of good sequences ending at every i, but also the number of bad sequences ending at every i. 
+
+---
+
+Let g(x) denote the number of good sequences ending at x and let b(x) denote the number of bad sequences ending at y. 
+
+Also keep in mind that G is the number of good sequences and B is the number of bad sequences. 
+
+---
+
+How do we update G and B as we go through the array ? 
+
+1. How do we update g(x) ? 
+
+When we process A[i], then there are two types of good sequences - 
+
+a. Bad sequences which become good by appending A[i] at the end. This means that the sequence must end with any one of       (A[i] - 1, A[i], A[i] + 1).
+
+b. Sequences which are already good remain good by appending A[i] at the end. 
+
+So the number of new good sequences 
+
+N = b(A[i] - 1) + b(A[i]) + b(A[i] + 1) + G
+
+g(A[i]) increases by this amount as does G
+
+g(A[i]) += N
+G += N
+
+---
+
+2. How do we update b(x)
+
+When we process A[i], these are the bad sequences - 
+
+a. A[i] on it's own forms a bad sequence. 
+b. All sequences which were bad remain bad on appending A[i]except the ones which become good because they end with -
+(A[i] - 1, A[i], A[i] + 1).
+
+So the number of new bad sequences 
+
+N' = B + 1 - b(A[i] - 1) - b(A[i]) - b(A[i] + 1)
+
+b(A[i]) += N'
+B += N'
+
+---
+
+int main()
+{
+    const int MAX_N = 1e5 + 5, MOD = 1e9 + 7;
+
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    vector <long long> good_sequences_ending_at(MAX_N, 0);
+    vector <long long> bad_sequences_ending_at(MAX_N, 0);
+
+    long long good_sequences = 0, bad_sequences = 0;
+
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        long long bad_sequences_turned_good = (bad_sequences_ending_at[A[i] - 1] + bad_sequences_ending_at[A[i]] + bad_sequences_ending_at[A[i] + 1])%MOD;
+
+        long long new_good_sequences = (bad_sequences_turned_good + good_sequences)%MOD;
+
+        good_sequences_ending_at[A[i]] = (good_sequences_ending_at[A[i]] + new_good_sequences)%MOD;
+
+        good_sequences = (good_sequences + new_good_sequences)%MOD;
+
+        long long new_bad_sequences = (bad_sequences + 1 - bad_sequences_turned_good + MOD)%MOD;
+
+        bad_sequences_ending_at[A[i]] = (bad_sequences_ending_at[A[i]] + new_bad_sequences)%MOD;
+
+        bad_sequences = (bad_sequences + new_bad_sequences)%MOD;
+    }
+
+    cout << good_sequences;
+    return 0;
+}
+

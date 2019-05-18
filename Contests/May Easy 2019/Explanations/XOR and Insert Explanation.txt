@@ -1,0 +1,172 @@
+This question taught me a lot including how to implement tries without pointers. 
+
+Let us deal with the logic required for the question. 
+
+---
+
+First, let us answer the following question - Given a trie and an integer X, how to find the minimum value of XOR(X, Y), where Y is some integer from the trie ? 
+
+We will go down the trie from the most significant bit to the least.
+
+Suppose we are at the i-th bit. 
+If X[i] = 1, we will go down the path of the trie which has 1. 
+If X[i] = 0, we will go down the path which has 0.
+
+If we do this, then the bit at the i-th position will be 0. 
+
+If at position i, we do not have a branch to go down X[i], we will go the other way.
+
+---
+
+Now this question is quite similar to this scenario.
+
+Note that we are only asked to answer queries of the third type - to return the minimum of the array. We do not need to 'answer' (print something) queries of the first and second type.
+
+Suppose we insert 
+A1, A2, A3 and then ask to xor everything with X1, X2, X3. 
+Then it is the same as Xor-ing with X = XOR(x1, x2, x3).
+
+Finding the minimum element is equivalent to finding the minimum among (A1, A2, A3) after XOR-ing with X.
+
+We have already noted how to do this with a trie.
+
+This is the basic idea. Now let us see in detail how to answer these queries correctly.
+
+---
+
+Let X = XOR(X1, X2, ... , Xn), where X1, X2, ... , Xn are all asked in the second query.
+
+---
+
+Operation 2 - Xor with Xi.
+
+We will not xor every element in the trie with Xi. 
+Rather, we will just update X = XOR(X, Xi)
+
+---
+
+Operation 3 - Get the minimum 
+
+We were supposed to have XOR-ed the entire array so far with X. 
+So now we will just calculate the minimum value of XOR(X, Y) with the help of the trie.
+
+---
+
+Operation 1 - Insert A
+
+We must not insert A into the trie, but XOR(A, X). This is a very important step. Why ? 
+
+Suppose we do this 
+
+Insert A1, A2
+
+XOR with X1
+
+Insert A3
+ 
+XOR with X2
+
+When we are asked the minimum now, we will find out the minimum value in - 
+
+{XOR(A1, X1, X2), XOR(A2, X1, X2), XOR(A3, X1, X2)}
+
+But A3 has only been XOR-ed with X2 and not X1. 
+
+---
+
+So it is critical that at every moment in time that we insert an element A into the trie, we insert XOR(A, X). 
+This ensures that when we caluclate the minimum, it will cancel out the previous XORs. 
+
+So in this example, our trie will contain 
+
+{A1, A2, XOR(A3, X1)}
+
+When we query the minimum value of XOR(X), we will be finding the minimum of 
+
+{XOR(A1, X1, X2), XOR(A2, X1, X2), XOR(A3, X2)}
+
+Which is what we want.
+
+Inserting XOR(A, X) will ensure that whenever we do the minimum operation, we do not do any unnecessary XORs on any A.
+
+----
+
+void answer()
+{
+    const int INSERT = 1, XOR_ALL = 2, FIND_MINIMUM = 3;
+    int query_type;
+    cin >> query_type;
+
+    switch(query_type)
+    {
+        case INSERT : int element;
+                      cin >> element;
+                      element ^= overall_xor;
+                      insert(element);
+                      break;
+
+        case XOR_ALL : int x;
+                       cin >> x;
+                       overall_xor ^= x;
+                       break;
+
+        case FIND_MINIMUM : cout << get_minimum_xor_with(overall_xor) << "\n";
+                            break;
+
+        default : cout << "Invalid Query\n";
+    }
+}
+
+---
+
+The insert function of the trie - 
+
+void insert(int x)
+{
+    int p = 0;
+
+    for(int bit = 30; bit >= 0; bit--)
+    {
+        int current_bit = is_bit_set(x, bit);
+
+        if(trie[p][current_bit] == 0)
+        {
+            trie[p][current_bit] = largest;
+
+            largest++;
+        }
+
+        p = trie[p][current_bit];
+    }
+}
+
+---
+
+The minimum xor with X function of the trie - 
+
+int get_minimum_xor_with(int x)
+{
+    int answer = 0, p = 0;
+
+    for(int bit = 30; bit >= 0; bit--)
+    {
+        int current_bit = is_bit_set(x, bit);
+        int other_bit = !current_bit;
+
+        if(trie[p][current_bit] != 0)
+        {
+            p = trie[p][current_bit];
+        }
+        else
+        {
+            p = trie[p][other_bit];
+            answer |= (1 << bit);
+        }
+    }
+
+    return answer;
+}
+
+---
+
+Be careful to insert 0 into the trie in the beginning.

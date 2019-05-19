@@ -1,0 +1,78 @@
+Let us solve this simpler problem - Given an array of numbers and an integer X, 
+how do we find the maximum value of XOR(X, A), where A is some integer in the array ? 
+
+We maintain a trie and insert every integer in A into the trie. 
+
+We will start visiting the trie starting from the most significant bit. 
+At every branch we will try to go to the opposite of X[i]. 
+
+If X has a bit = 1, then we will try to go down branch 0.
+If X has a bit = 0, then we will try to go down branch 1. 
+
+This ensures the bit is different at that position and will maximise the XOR.
+
+---
+
+Now, that we know this, how do we reduce the question we are given to this question ? 
+
+Every second subarray must end at some i. 
+
+We will iterate over all i and maintain the invariant that when we are at position i, we have inserted all subarray sums [l1, r1] where r1 <= i - 1 have already been inserted into the trie. 
+
+Then we will find the maximum subarray XOR we can get with - 
+
+1. The first subarray ending somewhere before i
+2. The second subarray starting exactly at i - There are (N - i) such sums. 
+
+---
+
+We will accordingly update our maximum xor. 
+
+After this, we will insert all the i subarray sums ENDING at i so that we are at (i + 1), all subarray sums ending till i are inserted into the trie.
+
+---
+
+int main()
+{
+	int no_of_elements;
+	cin >> no_of_elements;
+
+	for(int i = 1; i <= no_of_elements; i++)
+	    cin >> A[i];
+
+	sum[0] = 0;
+	for(int i = 1; i <= no_of_elements; i++)
+	    sum[i] = A[i] + sum[i - 1];
+
+	insert(0);
+
+	int answer = 0;
+	for(int i = 2; i <= no_of_elements; i++)
+	{
+	    int second_left = i;
+	    for(int second_right = second_left; second_right <= no_of_elements; second_right++)
+	    {
+	        int sum_here = sum[second_right] - sum[second_left - 1];
+
+	        answer = max(answer, maximum_xor_with(sum_here));
+	    }
+
+	    int first_right = i;
+	    for(int first_left = 1; first_left <= first_right; first_left++)
+	    {
+	        int sum_here = sum[first_right] - sum[first_left - 1];
+
+	        insert(sum_here);
+	    }
+	}
+
+	cout << answer;
+	return 0;
+}
+
+---
+
+The complexity is O(N^2 log(sum(A))). We iterate O(N^2) and log(sum(A)) is the worst case complexity of visiting the trie.
+
+
+

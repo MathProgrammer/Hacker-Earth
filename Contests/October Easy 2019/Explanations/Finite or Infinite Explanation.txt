@@ -1,0 +1,24 @@
+https://qr.ae/TW2Zwd
+
+Basically, if we have two coprime integers, then we can reach all integers after a certain limit L and the number of unreachable integers will always be finite. 
+
+We can find out if there are coprime integers by computing the GCD of the entire array and checking if it is 1. 
+
+----
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+    
+    int array_gcd;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int element;
+        cin >> element;
+        
+        array_gcd = (i == 1 ? element : __gcd(array_gcd, element));
+    }
+    
+    cout << (array_gcd == 1 ? "FINITE\n" : "INFINITE\n");
+}

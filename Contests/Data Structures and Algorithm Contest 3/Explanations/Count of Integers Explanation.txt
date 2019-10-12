@@ -1,0 +1,76 @@
+If gcd(i, n) = 1, then i is coprime to n
+
+If gcd(i, n) = i, then i is a divisor of n
+
+We want the count of all integers smaller than n, except those which are coprime to n and which are factors of n. 
+
+We do one sieve to find out the number of divisors of every integer. 
+
+----
+
+   vector <int> no_of_factors(MAX_N, 0);
+
+    for(int i = 1; i < MAX_N; i++)
+    {
+        for(int m = i; m < MAX_N; m += i)
+        {
+            no_of_factors[m]++;
+        }
+    }
+    
+----
+
+The number of integers that are coprime to n is just the Euler Totient (n). 
+
+phi(n) is a multiplicative function which means that if gcd(a, b) = 1, then phi(ab) = phi(a)phi(b)
+
+Suppoe p is some prime factor of n and p^x divides n. 
+
+phi(n) = phi(p^x) phi(n/p^x) = (p^x - p^(x - 1)) phi(n/p^x)
+
+This can be computed using a Sieve as well.
+
+-----
+
+    vector <int> largest_prime_factor(MAX_N, 0);
+    vector <int> euler_totient(MAX_N, 0);
+    euler_totient[1] = 1;
+    for(int i = 2; i < MAX_N; i++)
+    {
+        if(largest_prime_factor[i] == 0)
+        {
+            for(int m = i; m < MAX_N; m += i)
+            {
+                largest_prime_factor[m] = i;
+            }
+        }
+
+        int p_power_n = 1, reduced_i = i;
+
+        while(reduced_i%largest_prime_factor[i] == 0)
+        {
+            reduced_i /= largest_prime_factor[i];
+
+            p_power_n *= largest_prime_factor[i];
+        }
+
+        euler_totient[i] = (p_power_n - p_power_n/largest_prime_factor[i])*euler_totient[reduced_i];
+    }
+    
+-----
+
+Now, we can answer each query in O(1) time. 1 is the only integer which is both coprime to n and a divisor of it. 
+
+We are counting 1 twice which is why we need to add 1 to the answer.
+
+n - no_of_factors(n) - phi(n) + 1
+
+-----
+
+    while(no_of_queries--)
+    {
+        int n;
+        cin >> n;
+
+        cout << (n - no_of_factors[n] - euler_totient[n] + 1) << "\n";
+    }

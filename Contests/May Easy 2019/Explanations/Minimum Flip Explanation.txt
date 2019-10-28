@@ -1,0 +1,162 @@
+Let us suppose that we only had 1s and 0s and only one flip was allowed. 
+
+Then, we will replace the 0s by -1 and find out the segment which has the least sum S. 
+
+The total sum will reduce by S. 
+
+----
+
+Now, let us suppose we are dealing with the i-th bit. 
+
+Then, the sum will reduce S(2^i). 
+
+---
+
+The question is how do we deal with the situation where we do multiple flips on the same bit position. 
+
+We must always start the most significant bit and repeatedly perform flips on it till we have at least one +1 in it. 
+
+----
+
+1. We can do this by implementing a segment tree in such a way where the nodes are equipped to deal with the operation of 'flipping'. 
+
+2. Keep track of  sum. When we 'flip', the Sum get multiplied by -1. 
+
+3. After finding out the maximum sum S at each step, we will flip it. We will find [L, R] the end points of this segment by doing a DFS on this segment tree. Once we find it, we will flip it. 
+
+
+-----
+
+
+We will continue this operation as long as we have maximum sum > 0. For this, we need to keep track of maximum. We need to keep track of the maximum sum in the segment. But when we flip, the maximum becomes the minimum*-1. Hence, we need to keep track of the minimum as well. 
+
+Here is an elegant way to implement the merge function. 
+
+----
+
+node merge(node &A, node &B)
+{
+    node C;
+
+    C.sum = A.sum + B.sum;
+
+    C.max_left_sum = max(A.sum + B.max_left_sum, A.max_left_sum);
+    C.max_right_sum = max(B.sum + A.max_right_sum, B.max_right_sum);
+
+    C.min_left_sum = min(A.sum + B.min_left_sum, A.min_left_sum);
+    C.min_right_sum = min(B.sum + A.min_right_sum, B.min_right_sum);
+
+    C.max_sum = max_3(A.max_sum, B.max_sum, A.max_right_sum + B.max_left_sum);
+    C.min_sum = min_3(A.min_sum, B.min_sum, A.min_right_sum + B.min_left_sum);
+
+    return C;
+}
+
+----
+
+Here is how we handle a flip - 
+
+struct node
+{
+    int sum;
+    int max_sum, max_left_sum, max_right_sum;
+    int min_sum, min_left_sum, min_right_sum;
+
+    node(){}
+
+    node(int value)
+    {
+        sum = value;
+        max_sum = max_left_sum = max_right_sum = value;
+        min_sum = min_left_sum = min_right_sum = value;
+    }
+
+    void flip()
+    {
+        sum *= -1;
+        swap(max_sum, min_sum);
+        swap(max_left_sum, min_left_sum);
+        swap(max_right_sum, min_right_sum);
+
+        max_sum *= -1; min_sum *= -1;
+        max_left_sum *= -1; min_left_sum *= -1;
+        max_right_sum *= -1; min_right_sum *= -1;
+    }
+};
+
+-----
+
+We can DFS on our tree like this to find out which [L, R] has the given maximum sum. 
+
+pair <int, int> get_range(int n, int left, int right, int sum)
+{
+    if(lazy[n])
+        propagate(n, left, right);
+
+    if(tree[n].sum == sum)
+        return make_pair(left, right);
+
+    int mid = (left + right)/2;
+
+    if(tree[LEFT(n)].max_sum == sum)
+        return get_range(LEFT(n), left, mid, sum);
+
+    if(tree[RIGHT(n)]. max_sum == sum)
+        return get_range(RIGHT(n), mid + 1, right, sum);
+
+    int range_left = get_left(LEFT(n), left, mid, sum - tree[RIGHT(n)].max_left_sum);
+    int range_right = get_right(RIGHT(n), mid + 1, right, sum - tree[LEFT(n)].max_right_sum);
+
+    return make_pair(range_left, range_right);
+}
+
+-----
+
+Basically, we find out the 'effect' of all our K operations and then reduce our sum by this 'effect'. 
+
+int main()
+{
+    int no_of_elements, no_of_operations;
+    cin >> no_of_elements >> no_of_operations;
+
+    for(int i = 1; i <= no_of_elements; i++)
+        cin >> A[i];
+
+    long long sum = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+        sum += A[i];
+
+    vector <int> operations;
+    for(int b = MAX_BIT; b >= 0; b--)
+    {
+        for(int i = 1; i <= no_of_elements; i++)
+        {
+            bit[i] = (is_bit_set(A[i], b) ? 1 : -1);
+        }
+
+        build(1, 1, no_of_elements);
+
+        while(tree[1].max_sum > 0)
+        {
+            long long weight = (1LL << b);
+
+            long long operation_effect = tree[1].max_sum*weight;
+            operations.push_back(operation_effect);
+
+            pair <int, int> range = get_range(1, 1, no_of_elements, tree[1].max_sum);
+
+            update(1, 1, no_of_elements, range.first, range.second);
+        }
+    }
+
+    sort(all(operations));
+    reverse(all(operations));
+
+    for(int i = 0; i < min(no_of_operations, operations.size()); i++)
+    {
+        sum -= operations[i];
+    }
+
+    cout << sum;
+    return 0;
+}

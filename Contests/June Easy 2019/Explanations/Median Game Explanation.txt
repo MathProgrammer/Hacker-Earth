@@ -1,0 +1,23 @@
+The minimum and maximum element of the array are never the Median of any subarray. Hence, they are the final two elements remaining. 
+
+---
+
+void solve()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    const int oo = 1e9 + 9;
+    int maximum = -oo, minimum = oo;
+
+    while(no_of_elements--)
+    {
+        int element;
+        cin >> element;
+
+        maximum = max(maximum, element);
+        minimum = min(minimum, element);
+    }
+
+    cout << maximum + minimum << "\n";
+}

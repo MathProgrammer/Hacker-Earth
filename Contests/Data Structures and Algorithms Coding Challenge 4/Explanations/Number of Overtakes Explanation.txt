@@ -1,0 +1,96 @@
+We can assume that the distance is Infinity.
+
+The distance is so large that every horse will overtake all horses who's velocity is smaller than it. 
+
+We need to count the number of pairs (i, j) such that - 
+
+1. P[j] > P[i]
+2. V[j] < V[i]
+
+----
+
+Here is 1 way we can do this - 
+
+Let S[ .... ] be an array initially all 0s. 
+
+One by one, we will insert the horses in the descending order of velocity into this array in the position P[i]
+
+At every step, we have to take the count in the range [1, P[i] - 1]
+
+This is the answer because - 
+
+1. All the positions here are horses who's position is before i
+2. All the horses which are already placed here are horses who's velocity is greater. 
+
+---
+
+Let us take an example - V = [5 4 2 1 3] P = [3 4 5 1 2]
+
+Now, let us start inserting it one by one. 
+
+S = [ 0 0 1 0 0], Inversions = 0, Insert 1 at 3
+S = [ 0 0 1 1 0], Inversions = 1, Insert 1 at 4
+S = [ 0 1 1 1 0], Inversions = 1, Insert 1 at 2
+S = [ 0 1 1 1 1], Inversions = 1 + 3 = 4, Insert 1 at 5
+S = [ 1 1 1 1 1], Inversions = 4, Insert 1 at 1
+
+We are inserting the horses in descending order of velocities
+
+At each step, we are keeping track of how many horses lie before it with greater velocity. 
+
+We can just take the sum of S[1, P[i] - 1]
+
+The reason is that there is 1 whenever there is a horse who's velocity is greater. 
+And we are querying the range [1, P[i] - 1] where the horses lie before it. 
+
+----
+
+We need to be careful and not count the horses which have the same velocity as they will never intersect. 
+
+We can use a Segment Tree to get the sum in O(Log N) time.
+
+---
+
+int main()
+{
+	int no_of_horses;
+	cin >> no_of_horses;
+
+	vector <horse> H(no_of_horses + 1);
+	for(int i = 1; i <= no_of_horses; i++)
+	{
+	    cin >> H[i].velocity;
+	}
+
+	for(int i = 1; i <= no_of_horses; i++)
+	{
+	    cin >> H[i].position;
+	}
+
+	sort(all(H));
+
+	memset(sum_tree, 0, sizeof(sum_tree));
+
+	long long inversions = 0;
+	for(int i = 1; i <= no_of_horses;)
+	{
+	    int j;
+
+	    for(j = i; j <= no_of_horses && H[j].velocity == H[i].velocity; j++)
+	    {
+	        inversions += get_sum(1, 1, no_of_horses, 1, H[j].position - 1);
+	    }
+
+	    for(j = i; j <= no_of_horses && H[j].velocity == H[i].velocity; j++)
+	    {
+	        update(1, 1, no_of_horses, H[j].position, 1);
+	    }
+
+	    i = j;
+
+	}
+
+	cout << inversions << "\n";
+	return 0;
+}
+

@@ -1,0 +1,87 @@
+Let us root the tree at vertex 1. Each vertex has to be reachable from this vertex. 
+
+Now, if there is a forward or cross edge from (u, v), then it means that there are 2 paths from u to v. This means that flow from u to v will be more than 1. 
+
+We will perform DFS and maintain the invariant that at any given point in time, all of v's ancestors' are on the stack. If any of v's children is already visited, there are 2 possibilities - 
+
+1. It is on the stack. This means that v's child is a 'back-edge'. We will see what to do with this later. 
+
+2. It is not on the stack. This means that there was some forward or cross edge to the child of v before. This means it's not possible. 
+
+----
+
+Now, there is one more condition which we need to check. 
+
+Suppose there is a path from (u, v). Then, there also needs a path for flow from v to reach u. 
+
+Let us maintain a sum vector. S[v] represents the amount of 'backward' flow going up from v. 
+
+Whenever we find a back-edge, we will increase S[v] by 1 and make S[v-child] less by -1. 
+
+This is very similar to the idea that we have N entries and exits and need to find out the number of people at time T. We will make A[entry] + 1, and A[exit] --
+
+At the end, when we take prefix sum, the value at A[i] tells us the number of people there at time i. 
+
+---
+
+So, there are 4 conditions in total - 
+
+1. Each vertex must be visitable. 
+
+2. There should be no forward or cross edge. 
+
+3. For every vertex, the amount of backward-flow should be exactly 1, except the root, for which it should be 0. 
+
+Keep in mind that this is a directed graph and that there is no need to add self edges to this graph. 
+
+---
+
+void solve()
+{
+    int no_of_vertices, no_of_edges;
+    scanf("%d %d", &no_of_vertices, &no_of_edges);
+
+    forward_or_cross_edge = false;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        graph[i].clear();
+
+        visited[i] = false;
+        on_stack[i] = false;
+        covering_back_edges[i] = 0;
+    }
+
+    for(int i = 1; i <= no_of_edges; i++)
+    {
+        int u, v;
+        scanf("%d %d", &u, &v);
+
+        if(u != v)
+        {
+            graph[u].push_back(v);
+        }
+    }
+
+    int root = 1;
+    dfs(root);
+
+    int no_of_visited_vertices = 0;
+    for(int i = 1; i <= no_of_vertices; i++)
+    {
+        no_of_visited_vertices += (visited[i] == true);
+    }
+
+    int edges_with_back_path = 0;
+    for(int i = 2; i <= no_of_vertices; i++)
+    {
+        if(i == root)
+        {
+            continue;
+        }
+
+        edges_with_back_path += (covering_back_edges[i] == 1);
+    }
+
+    printf("%s", no_of_visited_vertices == no_of_vertices && forward_or_cross_edge == false
+            && edges_with_back_path == no_of_vertices - 1 ? "Yes\n" : "No\n");
+}

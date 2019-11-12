@@ -1,0 +1,82 @@
+We can reduce it to a Stars and Bars Problem. 
+
+Let us consider, 
+
+x1 - L = y1 >= a1
+x2 - x1 = y2 >= a2
+x3 - x2 = y3 >= a3
+.
+.
+.
+R - xn = y(n + 1)
+
+
+----
+
+However, x1, x2, x3, ... , xn has to be strictly increasing. So, 
+
+x1 - L = y1 >= max(1, a1)
+x2 - x1 = y2 >= max(1, a2)
+x3 - x3 = y3 >= max(1, a3)
+.
+.
+.
+R - xn = y(n + 1) 
+
+------
+
+Sometimes, ai is 0. We can't have x(i + 1) - x(i) >= 0, it has to be >= 1. 
+
+----
+
+Now, we will go to the next step. Let us add all these inequalities
+
+R - L = y1 + y2 + ... + yn + y(n + 1)
+
+Each yi >= max{ai, 1}
+
+Let us subtract sum{max(1, ai}} from both sides
+
+R - L - sum{max(1, ai)} = z1 + z2 + ... + zn + z(n + 1) 
+
+----
+
+Now, it is a Stars and Bars problem. 
+
+We have (N + 1) integers >= 0 with sum K. How many ways are there of doing this ? 
+
+C( Sum + (N + 1) - 1, N)
+
+----
+
+int main()
+{
+	int left, right, no_of_elements;
+	cin >> left >> right >> no_of_elements;
+
+	long long sum = 0;
+	vector <int> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements - 1; i++)
+	{
+	    cin >> A[i];
+
+	    A[i] = max(1,A[i]);
+
+	    sum -= A[i];
+	}
+
+	sum += right - left;
+
+	if(sum < 0)
+	{
+	    cout << "0\n";
+
+	    return 0;
+	}
+
+	const int MOD = 1e9 + 7;
+	long long answer = choose(no_of_elements + 1 + sum - 1, sum, MOD);
+
+	cout << answer;
+	return 0;
+}

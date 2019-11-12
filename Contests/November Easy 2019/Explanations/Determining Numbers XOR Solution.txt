@@ -1,0 +1,66 @@
+Given N integers in which every integer occurs twice except 1, which is the integer that occurs only once ?
+
+We can get this answer by taking the XOR of all the integer. The integers that occur twice cancel each other out, leaving only the unique integer.
+
+Now, when we have 2 unique integers u and v, the XOR of the integers is u?v. Let us take any bit set in u?v. This means that one of u,v has this bit set and the other does not.
+
+So, we will make two arrays — A and B, where A consists of integers which have that bit set and B consists of integers which do not have that bit set and it reduces to the first problem that we discussed.
+
+-----
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define all(v) (v).begin(), (v).end()
+using namespace std;
+
+int is_bit_set(int n, int bit)
+{
+    return ( (n & (1LL << bit)) != 0);
+}
+
+int main()
+{
+    int no_of_elements;
+    cin >> no_of_elements;
+
+    vector <int> A(no_of_elements + 1, 0);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+    }
+
+    int array_xor = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        array_xor ^= A[i];
+    }
+
+    int bit_position = 35;
+    for(int bit = 31; bit >= 0; bit--)
+    {
+        if(is_bit_set(array_xor, bit))
+        {
+            bit_position = bit;
+            break;
+        }
+    }
+
+    int u = 0, v = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        if(is_bit_set(A[i], bit_position))
+        {
+            v ^= A[i];
+        }
+        else
+        {
+            u ^= A[i];
+        }
+    }
+
+    cout << u << " " << v << "\n";
+
+    return 0;
+}

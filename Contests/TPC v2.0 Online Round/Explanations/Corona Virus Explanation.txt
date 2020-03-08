@@ -1,0 +1,74 @@
+Let f(i) be the number of ways of dividing the first i elements
+
+Let us iterate over the size of the last segment.
+
+The last segment [j, i] can be any segment as long as A[j, i] has 2 ones
+
+Suppose we have 2 ones in A[j, i], then we will add f(j - 1) to f(i)
+
+f(i) = sum(f(j - 1)), for all j such that A[j, i] has 2 ones
+
+-----
+
+As a base case, f(0) = 1
+
+-----
+
+We can compute this DP in O(n^2) time
+
+For every i, we will iterate over all j's such that A[j, i] = 2
+
+Then the last segment is A[j, i] 
+
+And we will see, how many ways we can divide A[1, j - 1], which is f(j - 1)
+
+-----
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    int length;
+    string S;
+    cin >> length >> S;
+
+    const int MOD = 1e9 + 7;
+    vector <long long> no_of_ways(length + 1);
+    for(int i = 0; i < length; i++)
+    {
+        int ones_here = 0;
+
+        for(int j = i; j >= 0 && ones_here <= 2; j--)
+        {
+            ones_here += (S[j] == '1');
+
+            if(ones_here == 2)
+            {
+                if(j >= 1)
+                {
+                    no_of_ways[i] += no_of_ways[j - 1];
+                }
+                else
+                {
+                    no_of_ways[i]++;
+                }
+            }
+        }
+
+        no_of_ways[i] %= MOD;
+    }
+
+    long long answer = no_of_ways[length - 1];
+
+    if(no_of_ways[length - 1] == 0)
+    {
+        answer = -1;
+    }
+
+    cout << answer << "\n";
+
+    return 0;
+}

@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    long long total_sum, no_of_elements;
+    cin >> total_sum >> no_of_elements;
+    
+    long long sum = 0;
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        int x;
+        cin >> x;
+        
+        sum += x;
+    }
+    
+    long long answer = (total_sum/sum) + (total_sum%sum != 0);
+    
+    cout << answer << "\n";
+    
+    return 0;
+}

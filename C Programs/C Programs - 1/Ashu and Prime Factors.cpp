@@ -3,7 +3,6 @@
 
 #define UNMARKED 0
 
-using namespace std;
 
 vector <int> no_of_numbers_with_least_prime_factor(1e6 + 1, 0);
 

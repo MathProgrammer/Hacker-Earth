@@ -1,0 +1,123 @@
+The (i x i) grid contains the entire (i - 1) x (i - 1) grid and then the line of the i-th grid. 
+
+How do we calculate the contribution of the i-th line ? 
+
+The (i - 1)th line has 
+
+(1, i - 1), (2, i - 1), ... , (i - 2, i - 1) 
+(i - 1, i - 1) 
+(i - 1, 1), (i - 1, 2), ... , (i - 1, i - 2) 
+
+The sum inside the cell numbers range from [i, 2i - 3] twice and then [2i - 2]
+
+-----
+
+The (i)th line has 
+
+(1, i), (2, i), ... , (i - 1, i)
+(i, i) 
+(i, 1), (i, 2), ... , (i, i - 1)
+
+The sum inside the cell numbers range from [i + 1, 2i - 1] twice and then [2i]
+
+-----
+
+This gives us an idea on how to build line[i] from line[i - 1] ! 
+
+We need to first take care of the sides and then the sides - 
+
+1. Subtract 2(value[i]) and add 2(value[2i - 1] + value[2i - 2]) 
+2. Subtract (value[2i - 2]) and add (value[2i])
+
+-----
+
+Please note that the base case should be line[2] and not line[1]. The reason is that when we are transitioning, we are depending on (1, i - 1) appearing twice, 
+but this does not happen when we transition from 1 -> 2
+
+So, we will keep line[2] as the base case 
+
+The answer for grid of size [n] = line[1] + line[2] + ... + line[n]
+
+-----
+
+#include <iostream>
+#include <vector>
+ 
+using namespace std;
+ 
+const int MAX_N = 1e6 + 5;
+long long answer[MAX_N], line[MAX_N], value[2*MAX_N];
+ 
+int get_value(int n)
+{
+    int even = 0, odd = 0;
+ 
+    while(n)
+    {
+        int digit = n%10;
+ 
+        if(digit%2 == 0)
+        {
+            even += digit;
+        }
+        else 
+        {
+            odd += digit;
+        }
+ 
+        n /= 10;
+    }
+ 
+    int value = abs(even - odd);
+ 
+    return value;
+}
+ 
+void precompute_answer()
+{
+    for(int i = 1; i < 2*MAX_N; i++)
+    {
+        value[i] = get_value(i);
+    }
+ 
+    line[1] = 2;
+    line[2] = 2*value[3] + value[4];
+    for(int i = 3; i < MAX_N; i++)
+    {
+        /* Line (i - 1) ranges from [i, 2i - 3] and (2i - 2)
+           Line (i) ranges from [i + 1, 2i - 1] and (2i)*/
+ 
+        line[i] = line[i - 1] + 
+                2*(-value[i] + value[2*i - 2] + value[2*i - 1])
+                + (-value[2*i - 2] + value[2*i]);
+    }
+ 
+    answer[1] = 2;
+    for(int i = 2; i < MAX_N; i++)
+    {
+        answer[i] = answer[i - 1] + line[i];
+    }
+}
+ 
+void solve()
+{
+    int n;
+    cin >> n;
+ 
+    cout << answer[n] << "\n";
+}
+ 
+int main()
+{
+    precompute_answer();
+ 
+    int no_of_test_cases;
+    cin >> no_of_test_cases;
+ 
+    while(no_of_test_cases--)
+    {
+        solve();
+    }
+ 
+    return 0;
+}

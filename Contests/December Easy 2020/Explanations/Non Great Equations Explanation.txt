@@ -1,0 +1,36 @@
+Let us rearrange the equation to take advantage of the symmetry.
+
+a^2 + b^3 = c^2 
+
+b^3 = c^2 - a^2 = (c + a)(c - a)
+
+Suppose, we have two factors of b^3 = pq, 
+
+Then, c + a = p, c - a = q 
+
+But b^3 is too big to fit into 64 bits or be factorised. 
+
+But, b and b^2 are both divisors of b^3 ! 
+
+c + a = b^2 
+c - a = b 
+
+c = (b^2 + b)/2, a = (b^2 - b)/2
+
+-----
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	long long a, b, c;
+	cin >> b;
+
+	c = (b*b + b)/2;
+	a = (b*b - b)/2;
+
+	cout << a << " " << c << "\n";
+	return 0;
+}

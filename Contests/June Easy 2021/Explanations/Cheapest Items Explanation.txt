@@ -1,0 +1,65 @@
+- The main ingenious idea of this problem is that we can increase the value of each object by $1$ in order to remove the state of the $DP$ 
+which keeps track of size of the subset.
+    - Now, the value automatically holds the size of it's own subset.
+    
+- Let $f(i, v)$ be the minimum price if our current subset has value $v$ among the first $i$ objects.
+
+f(i, v) = min{f(i - 1, v) f(i - 1, v - v[i]) + p[i]) 
+
+- We have to make only one more optimisation to this. If the total value of our subset exceeds $N$, we will set it as $N$ 
+since we only want to know if the total value is $\ge N$
+
+-----
+
+
+#include <iostream>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+void solve()
+{
+	int no_of_elements;
+	cin >> no_of_elements;
+
+	vector <int> value(no_of_elements + 1), price(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> value[i] >> price[i];
+		value[i]++;
+	}
+
+	const long long oo = 1e18;
+	vector < vector <long long> > minimum_price(no_of_elements + 1, vector <long long> (no_of_elements + 1, oo));
+	minimum_price[0][0] = 0;
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		for(int v = 0; v <= no_of_elements; v++)
+		{
+			minimum_price[i][v] = minimum_price[i - 1][v];
+		}
+
+		for(int previous_value = 0; previous_value <= no_of_elements; previous_value++)
+		{
+			int value_here = min(previous_value + value[i], no_of_elements);
+
+			minimum_price[i][value_here] = min(minimum_price[i][value_here], 
+						price[i] + minimum_price[i - 1][previous_value]);
+		}
+	}
+	
+	cout << minimum_price[no_of_elements][no_of_elements] << "\n";
+}
+
+int main()
+{
+	int no_of_test_cases;
+	cin >> no_of_test_cases; 
+
+	while(no_of_test_cases--)
+		solve();
+	
+	return 0;
+}
+

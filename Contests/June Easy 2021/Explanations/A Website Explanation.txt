@@ -13,7 +13,14 @@ There are 3 types of components -
 2. A cycle of length L will cost (L + 1) 
 3. A self loop costs 0 
 
-While checking if there is a cycle, we have to check if we end up visiting the same vertex 
+While checking if there is a cycle, we have to check if we end up visiting the same vertex i
+If our DFS ends on a vertex that is already visited v, but v is not i, then it is not a cycle. 
+It might be a straight line like 
+1 -> 2 
+3 -> 1 
+
+Since it is a functional graph, each vertex has indegree and outdegree 1. 
+A cycle is complete only if we finish at i.
 
 -----
 

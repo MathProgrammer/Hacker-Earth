@@ -11,7 +11,7 @@ since we only want to know if the total value is $\ge N$
 
 -----
 
-
+```cpp
 #include <iostream>
 #include <map>
 #include <vector>
@@ -62,4 +62,4 @@ int main()
 	
 	return 0;
 }
-
+```

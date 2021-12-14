@@ -1,0 +1,23 @@
+Let X = (A_1 A_2 ... A_n) - 1 
+
+x = -1 (mod A_i) 
+
+So we can get the maximum mod (-1) with all of the integers. The answer is sum of (A_i - 1)
+
+-----
+
+void solve()
+{
+	int no_of_elements; 
+	cin >> no_of_elements; 
+
+	long long sum = 0;
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		int x; 
+		cin >> x; 
+		sum += (x - 1);
+	}
+
+	cout << sum << "\n";
+}

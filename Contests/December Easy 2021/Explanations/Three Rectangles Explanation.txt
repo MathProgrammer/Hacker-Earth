@@ -1,0 +1,86 @@
+This problem looks like it lends itself to an O(1) solution because the answer is 0 whenever either H or W = 0 (mod 3)
+
+However, there isn't.
+
+However, we can do an O(H + W) solution 
+
+There are only 4 ways to cut a rectangle into 3 rectangles - All three are stripes or one is a stripe and the other two form a 'T' shape 
+Or the rotation of this figure
+
+Iterate over all of them. 
+
+Iterate over the height of the first rectangle. 
+
+1. All 3 Parallel 
+
+This leads to 3 rectangles 
+
+a. iW
+b. W(H - i)/2
+c. W(H - i)/2 
+
+------
+
+2. T shape 
+
+This leads to 3 rectangles 
+
+a. iW
+b. (H - i)W/2
+c. (H - i)W/2 
+
+-----
+
+Note that the if the remaining height is 1, we cannot divide it into 2 because the rectangles have to have integer sides. 
+
+Do the same thing for the width too. 
+
+long long ceil(long long numerator, long long denominator)
+{
+	return (numerator/denominator) + (numerator%denominator != 0);
+}
+
+long long max_min_difference(long long a, long long b, long long c)
+{
+	long long maximum = max(a, max(b, c));
+	long long minimum = min(a, min(b, c));
+
+	return (maximum - minimum);
+}
+
+void solve()
+{
+	long long height, width; 
+	cin >> height >> width; 
+
+	const long long oo = 1e18;
+	long long answer = oo;
+
+	for(long long i = 1; i <= height; i++)
+	{
+		long long remaining_height = (height - i);
+
+		long long other_2_perpendicular = max_min_difference(i*width,remaining_height*ceil(width, 2), remaining_height*(width/2));
+
+		long long all_3_parallel = (remaining_height == 1 ? oo : max_min_difference(i, ceil(remaining_height, 2), remaining_height/2)*width);
+
+		long long min_here = min(all_3_parallel, other_2_perpendicular);
+
+		answer = min(answer, min_here);
+	}
+
+	for(int i = 1; i <= width; i++)
+	{
+		long long remaining_width = (width - i);
+
+		long long other_2_perpendicular = max_min_difference(i*height, remaining_width*ceil(height, 2), remaining_width*(height/2));
+
+		long long all_3_parallel = (remaining_width == 1 ? oo : max_min_difference(i, ceil(remaining_width, 2), remaining_width/2)*height);
+
+		long long min_here = min(all_3_parallel, other_2_perpendicular);
+
+		answer = min(answer, min_here);
+	}
+	
+	cout << answer << "\n";
+}

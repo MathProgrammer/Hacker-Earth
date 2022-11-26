@@ -1,0 +1,35 @@
+Let us notice that a bit will be set in the final answer only if it is set in every integer of both A and B 
+
+If it is not set in even one integer, at least one integer of C will have that bit = 0 
+
+This will result in it being 0 in the answer as well 
+
+-----
+
+void solve()
+{
+		int no_of_elements; 
+		cin >> no_of_elements; 
+	
+		vector <int> A(no_of_elements + 1);
+		for(int i = 1; i <= no_of_elements; i++)
+		{
+				cin >> A[i];
+		}
+	
+		vector <int> B(no_of_elements + 1);
+		for(int i = 1; i <= no_of_elements; i++)
+		{
+				cin >> B[i];
+		}
+	
+		const int NO_OF_BITS = 30;
+		vector <int> is_set(NO_OF_BITS, true);
+		for(int i = 1; i <= no_of_elements; i++)
+		{
+				for(int bit = 0; bit < NO_OF_BITS; bit++)
+				{
+						is_set[bit] &= (is_bit_set(A[i], bit));
+						is_set[bit] &= (is_bit_set(B[i], bit));
+				}
+		}

@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+ 
+void sieve(int N, vector <int> &no_of_factors)
+{
+	for(long long i = 1; i < N; i++)
+	{
+		for(int multiple = i; multiple < N; multiple += i)
+		{
+			no_of_factors[multiple]++;
+		}
+	}
+}
+ 
+int main() 
+{
+	const int MAX_N = 1e6 + 5;
+	vector <int> no_of_factors(MAX_N);
+	sieve(MAX_N, no_of_factors);
+ 
+	vector <int> good_numbers_till(MAX_N, 0);
+	for(int i = 1; i < MAX_N; i++)
+	{
+		good_numbers_till[i] = good_numbers_till[i - 1] + (no_of_factors[i] == 4);
+	}
+ 
+	int no_of_queries; 
+	cin >> no_of_queries;
+ 
+	for(int i = 1; i <= no_of_queries; i++)
+	{
+		int left, right; 
+		cin >> left >> right; 
+		cout << good_numbers_till[right] - good_numbers_till[left - 1] << "\n";
+	}
+ 
+	return 0;
+}

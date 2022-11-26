@@ -1,4 +1,4 @@
-We can precalculate the number of factors for all numbers.
+We can precalculate the number of factors for all numbers with a sieve
 
 We will then build a prefix sum over this array and answer each query in O(1) time
 

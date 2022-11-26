@@ -1,4 +1,21 @@
+Let us ask the reverse question - 
 
+Given a fixed n, is it possible to complete the allocation ? 
+
+We can binary search over this as it is monotonic. 
+
+-----
+
+We will do the allocation in a greedy way. 
+
+First, we will assign both A and B the numbers that the others cannot take. 
+
+Give A all integers that are multiples of y but not xy 
+Give B all integers that are multiples of x but not xy
+
+Then, we will assign the integers which are not multiples of both X and Y
+
+Check if we have completed our task 
 
 -----
 

@@ -53,14 +53,12 @@ void solve()
 		long long product = product_till[right]*inverse(product_till[left - 1], MOD);
 		product %= MOD;
 
-		//cout << "i = " << i << " P = " << product << " " << "L " << product_till[left - 1] << " " << product_till[left - 1]*inverse(product_till[left - 1], MOD)%MOD << endl;
-
 		maximum = max(product, maximum);
 		minimum = min(product, minimum);
 	}
 
-	long long answer = maximum - minimum; 
-	//answer %= MOD;
+	long long answer = maximum - minimum + MOD;
+	answer %= MOD;
 
 	cout << answer << "\n";
 }

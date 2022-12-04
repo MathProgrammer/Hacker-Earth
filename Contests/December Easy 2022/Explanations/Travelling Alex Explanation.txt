@@ -1,0 +1,88 @@
+Let us notice that the optimal solution involves us making a certain number of round trips to the root and then a one way trip through exactly one path 
+
+-----
+
+The main way to solve most tree problems is to think about how to combine the solutions for an node's children for itself 
+
+We will keep track of two quantities - 
+
+1. Round Trip(v) -> The cost of starting at v, visiting all it's children and finishing at v 
+2. One way trip (v) -> The cost of starting at v, visiting all it's children but not finishing at v 
+
+-----
+
+Suppose v has C children. 
+
+Round Trip (v) = 2C + sum( Round Trip (child_v) )
+
+One Way Trip (v) would involve doing a round trip of C - 1 children but a one way trip of one of it's children. Choose the best such child 
+
+One Way Trip (v) = [2(C - 1) + sum(Round Trip (child_v) - Round Trip(This Child)] + [1 + One Way Trip(This Child)] 
+
+The first block is the cost of doing a round trip of C - 1 children and the second is for a one way trip of this child. 
+
+Among all such possibilities, choose the one that has the minimum cost. 
+
+-----
+
+void dfs(int v, int parent_v)
+{
+	if(graph[v].size() == 1 && v != 1)
+	{
+		return;
+	}
+
+	int total_child_trip = 0, no_of_children = 0;
+	for(int child_v : graph[v])
+	{
+		if(child_v == parent_v)
+		{
+			continue;
+		}
+
+		dfs(child_v, v);
+
+		round_trip[v] += 2 + round_trip[child_v];
+
+		total_child_trip += round_trip[child_v];
+
+		no_of_children++;
+	}
+
+	one_trip[v] = oo;
+	for(int child_v : graph[v])
+	{
+		if(child_v == parent_v)
+		{
+			continue;
+		}
+
+		int remaining_round_trip = 2*(no_of_children - 1) + (total_child_trip - round_trip[child_v]);
+
+		int one_trip_here = 1 + one_trip[child_v] + remaining_round_trip;
+
+		one_trip[v] = min(one_trip[v], one_trip_here);
+	}
+}
+
+void solve()
+{
+    int no_of_vertices; 
+	cin >> no_of_vertices; 
+
+	clear(no_of_vertices);
+
+	int no_of_edges = no_of_vertices - 1; 
+	for(int i = 1; i <= no_of_edges; i++)
+	{
+		int u, v; 
+		cin >> u >> v; 
+
+		graph[u].push_back(v);
+		graph[v].push_back(u);
+	}
+
+    dfs(1, 0);
+
+	cout << one_trip[1] << "\n";
+}

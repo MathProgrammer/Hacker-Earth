@@ -1,0 +1,86 @@
+Let us arbitrarily root the tree at 0. 
+
+Let us keep track of two quantities 
+
+Down_potential[v] -> The potential of the subtree rooted at v, if 0 is the root 
+Potential[v] -> The potential of v, if the tree was rooted at v 
+
+How to calculate Down_potential[v] ? 
+
+We can do it with a simple DFS 
+
+void dfs_down(int parent_v, int v, vector <vector <int> > &T,vector <int> &down_P)
+{
+	if(T[v].size() == 1)
+	{
+		down_P[v] = (v%2);
+	}
+
+	for(int child_v : T[v])
+	{
+		if(child_v == parent_v)
+		{
+			continue;
+		}
+
+		dfs_down(v, child_v, T, down_P);
+		down_P[v] += (down_P[child_v] > 0);
+	}
+}
+
+-----
+
+Now, how will we calculate potential[v], given down_potential of every vertex ? 
+
+Let us analyse how the potential of a vertex would change.
+
+Firstly, we should already know the potential[parent_v] before reaching v.
+
+Then, we can calculate the potential[parent_v] without v. 
+This is easy to do. If Down_potential[v] > 0, then potential[parent] without v is just potential[parent] - 1 
+
+Now, 
+
+Potential[v] = Down_Potential[v] + (parent_potential_without[v] > 0)
+
+There is another case if v is a leaf vertex. 
+When v is the root, it is no longer a leaf, so it would be 
+
+Potential[v] = Down_potential[v] - (v%2) + (parent_potential_without[v]) 
+
+And if v = 0
+
+Potential[v] = Down_potential[v]
+
+------
+
+void dfs_up_down(int parent_v, int v, vector <vector <int> > &T,vector <int> &down_P, vector <int> &P)
+{
+	int parent_potential_without_v = 0;
+
+	if(parent_v != -1)
+	{ 
+		parent_potential_without_v = P[parent_v] - (down_P[v] > 0);
+	}
+
+	if(T[v].size() == 1)
+	{
+		P[v] = down_P[v] - (v%2) + (parent_potential_without_v > 0);
+	}
+	else 
+	{
+		P[v] = down_P[v] + (parent_potential_without_v > 0);
+	}
+
+	for(int child_v : T[v])
+	{
+		if(child_v == parent_v)
+		{
+			continue;
+		}
+
+		dfs_up_down(v, child_v, T, down_P, P);
+	}
+
+	//cout << "V = " << v << " Parent = " << parent_v << " Parent without v = " << parent_potential_without_v << " Potential = " << P[v] << "\n";
+}

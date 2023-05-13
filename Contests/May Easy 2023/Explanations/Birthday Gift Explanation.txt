@@ -1,0 +1,14 @@
+Add an arithmetic series of length Z to X and check if we are able to reach Y. 
+
+-----
+
+void solve()
+{
+	long long x, y, z;
+	cin >> x >> y >> z;
+
+	long long need = y - x;
+	long long max_addition = (z*1LL*(z + 1))/2;
+
+	cout << (max_addition >= need ? "YES" : "NO") << "\n";
+}

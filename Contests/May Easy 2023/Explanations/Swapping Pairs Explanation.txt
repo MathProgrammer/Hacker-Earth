@@ -1,0 +1,44 @@
+Let f(S, i) be true if it is possible to reach a sum of S using the first i elements. 
+
+f(S, i) = f(S - A[i], i - 1) OR f(S - B[i], i - 1) OR f(S, i - 1) 
+
+S is reachable with i elements only if (S - A[i]) or (S - B[i]) is reachable with i - 1 elements or if S is reachable on it's own with (i - 1) elements.
+
+I have saved space in my DP by only keeping track of F(S) of the current and previous element. 
+
+-----
+
+void solve()
+{
+	int no_of_elements, M;
+	cin >> no_of_elements >> M;
+
+	vector <int> A(no_of_elements + 1), B(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i] >> B[i];
+	}
+
+	vector <int> reachable(M + 1, false);
+	reachable[0] = true;
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		vector <int> reachable_here(M + 1, false);
+		for(int m = 0; m <= M; m++)
+		{
+			if(m - A[i] >= 0 && reachable[m - A[i]])
+			{
+				reachable_here[m] = true;
+			}
+
+			if(m - B[i] >= 0 && reachable[m - B[i]])
+			{
+				reachable_here[m] = true;
+			}
+		}
+
+		reachable = reachable_here;
+	}
+
+	cout << (reachable[M] ? "YES" : "NO") << "\n";
+}

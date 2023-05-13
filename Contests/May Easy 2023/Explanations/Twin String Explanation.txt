@@ -1,0 +1,36 @@
+A string [L, R] is good if every letter's frequency is even. 
+In other words, the parity of the frequency of every letter is the same in [1, L - 1] and [1, R] 
+
+Let us represent all prefix strings by a bitmask of length 26. 
+The i-th bit of the bitmask represents the parity of the frequency of alphabet i. 
+
+We will keep track of the frequency of the prefix masks. 
+
+The number of good strings ending at i is = frequency[mask[i]]
+
+------
+
+void solve()
+{
+	int length;
+	string S; 
+	cin >> length >> S;
+
+	map <int, int> prefix_frequency;
+	int prefix_mask = 0;
+	prefix_frequency[0] = 1;
+
+	long long answer = 0;
+	for(int i = 0; i < S.size(); i++)
+	{
+		int alpha = (S[i] - 'a');
+		int bit = (1 << alpha);
+
+		prefix_mask ^= bit; 
+		answer += prefix_frequency[prefix_mask];
+
+		prefix_frequency[prefix_mask]++;
+	}
+
+	cout << answer << "\n";
+}

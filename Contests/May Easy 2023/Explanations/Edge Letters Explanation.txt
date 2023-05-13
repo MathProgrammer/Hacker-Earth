@@ -1,0 +1,47 @@
+There are only 26^2 pairs so let us precompute the answer for all of them. 
+
+Let us answer, how many strings [A, B] are there ? 
+
+Every occurrence of A can be matched to every occurence of B that occurs after it or in it's suffix. 
+
+Let us keep track of the suffix frequency of every alphabet 
+
+And then update answer [S[i], alpha] += suffix_frequency[alpha], for every alpha in the suffix. 
+
+-----
+
+int main() 
+{
+	string S; 
+	cin >> S; 
+
+	const int NO_OF_ALPHABETS = 26;
+	vector <int> suffix_frequency(NO_OF_ALPHABETS, 0);
+	vector <vector <long long> > answer(NO_OF_ALPHABETS, vector <long long> (NO_OF_ALPHABETS, 0));
+	for(int i = S.size() - 1; i >= 0; i--)
+	{
+		suffix_frequency[S[i] - 'a']++;
+
+		int left_alpha = S[i] - 'a';
+		for(int right_alpha = 0; right_alpha < NO_OF_ALPHABETS; right_alpha++)
+		{
+			int new_segments = suffix_frequency[right_alpha];
+
+			answer[left_alpha][right_alpha] += new_segments;
+		}
+	}
+
+	int no_of_queries; 
+	cin >> no_of_queries; 
+
+	for(int i = 1; i <= no_of_queries; i++)
+	{
+		char L, R; 
+		cin >> L >> R; 
+		
+		int left = L - 'a', right = R - 'a'; 
+		cout << answer[left][right] << "\n";
+	}
+
+	return 0;
+}

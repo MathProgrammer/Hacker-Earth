@@ -107,7 +107,7 @@ All integers of this form will
 
 1. Match some prefix of length i in N 
 2. Have a smaller digit at the (i + 1)th position where d < S[i + 1]
-3. The prefix can be chosen freely. 
+3. The suffix can be chosen freely. 
 
 Iterate over all prefixes and the smaller digit. 
 Iterate over all possible prime sums. Accordingly, suffix_sum = prime_sum - prefix_sum 

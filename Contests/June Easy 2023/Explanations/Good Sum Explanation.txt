@@ -1,0 +1,53 @@
+We can come up with a combinatorial solution but a DP solution is simpler. 
+
+Let f(i, m) be the number of sequences that involve that first i elements who's sum = m (mod 2) 
+
+For this, we can replace every A[i] = A[i] (mod 2) since we only care about it's remainder mod 2. 
+
+f(i, m) = f(i - 1, m) + f(i - 1, (A[i] - m) mod 2)
+
+This corresponds to adding the number of sequences that only include the first (i - 1) elements and have sum m 
+
+And the the number of sequences of the first (i - 1) elements who's sum is (m - A[i]) and becomes m on including A{i]
+
+There is also a new sequence consisting of only A[i] so first set f(i, A[i] mod 2) = 1
+
+------
+
+#include <iostream>
+#include <vector> 
+ 
+using namespace std;
+int main() 
+{
+	int no_of_elements; 
+	cin >> no_of_elements; 
+ 
+	vector <long long> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i];
+ 
+		A[i] %= 2;
+	}
+ 
+	const int MOD = 1e9 + 7;
+	vector <vector <int> > no_of_sequences(no_of_elements + 1, vector <int> (2, 0));
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		no_of_sequences[i][A[i]] = 1;
+ 
+		for(int m = 0; m < 2; m++)
+		{
+			no_of_sequences[i][m] += no_of_sequences[i - 1][m];
+			no_of_sequences[i][m] %= MOD;
+ 
+			int new_m = (A[i] + m)%2;
+			no_of_sequences[i][new_m] += no_of_sequences[i - 1][m];
+			no_of_sequences[i][new_m] %= MOD;
+		}
+	}
+ 
+	cout << no_of_sequences[no_of_elements][0] << "\n";
+	return 0;
+}

@@ -1,0 +1,75 @@
+Let the total score be A and B respectively. 
+
+Alice is trying to maximise (A - B) while B is trying to minimize it. 
+
+-----
+
+Let us first prove that we only need to consider those elements who's frequency is 1. 
+
+Suppose some integer's frequency is > 2
+
+Only 2 of it's occurences will be chosen. One by A and the other by B. We can ignore those. 
+
+Since the same integer is being added to both A and B, it does not change the difference (A + x) - (B + x) = (A - B) 
+
+So, we will ignore those elements who's frequency is > 1
+
+-----
+
+I wrote a DP where f(i, Alice) is the highest score in the first i elements if Alice is going to move 
+and f(i,  Bob) means the same if it's Bob to move.
+
+Once Alice moves on A[1, i], Alice can take A[i] and then it's Bob's turn to move on A[1, i - 1]
+
+f(i, Alice) = f(i - 1, Bob) + i
+f(i, Bob) = f(i - 1, Alice) - i 
+
+----
+
+A DP is actually not necessary. A greedy strategy can work here. 
+Bob can never get more than Alice if Alice always takes the largest available element. 
+This will ensure at every step, Bob has at most as much total as Alice. 
+
+We can just alternately allocate the elements in descending order. 
+
+------
+
+Check if the difference is > 0 or = 0 in the end to decide if the winner is Alice or Bob respectively. 
+
+------
+
+void solve()
+{
+    int no_of_elements; 
+    cin >> no_of_elements; 
+
+    const int MAX_A = 1e3 + 5; 
+    vector <int> frequency(MAX_A);
+    vector <int> A(no_of_elements + 1);
+    for(int i = 1; i <= no_of_elements; i++)
+    {
+        cin >> A[i];
+
+        frequency[A[i]]++;
+    }
+
+    vector <int> final_A;
+    final_A.push_back(0);
+    const int ALICE = 0, BOB = 1;
+    vector <vector <int> > difference(MAX_A, vector <int> (2, 0));
+    for(int i = 1; i < MAX_A; i++)
+    {
+        if(frequency[i] == 1)
+        {
+            difference[i][ALICE] = difference[i - 1][BOB] + i;
+            difference[i][BOB] =  difference[i - 1][ALICE] - i;
+        }
+        else
+        {
+            difference[i][ALICE] = difference[i - 1][ALICE];
+            difference[i][BOB] =  difference[i - 1][BOB];
+        }
+    }
+    
+    cout << (difference[MAX_A - 1][ALICE] > 0 ? "Alex" : "Bob") << "\n";
+}

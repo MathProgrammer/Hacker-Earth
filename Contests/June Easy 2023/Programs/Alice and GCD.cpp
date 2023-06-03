@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector> 
+#include <algorithm>
+
+using namespace std;
+
+int is_bit_set(int n, int bit)
+{
+	return ( (n&(1 << bit)) != 0 );
+}
+
+int main() 
+{
+	int no_of_elements; 
+	cin >> no_of_elements; 
+
+	vector <int> A(no_of_elements + 1);
+	for(int i = 0; i < no_of_elements; i++)
+	{
+		cin >> A[i];
+	}
+
+	int max_mask = (1 << no_of_elements), no_of_rounds = no_of_elements/2; 
+	vector <vector <int> > max_score(max_mask, vector <int> (no_of_rounds + 1));
+	for(int m = 0; m < max_mask; m++)
+	{
+		if(__builtin_popcount(m)%2 == 1)
+		{
+			continue;
+		}
+
+		int round_no = __builtin_popcount(m)/2;
+
+		for(int bit_1 = 0; bit_1 < no_of_elements; bit_1++)
+		{
+			if(!is_bit_set(m, bit_1))
+			{
+				continue;
+			}
+
+			for(int bit_2 = bit_1 + 1; bit_2 < no_of_elements; bit_2++)
+			{
+				if(!is_bit_set(m, bit_2))
+				{
+					continue;
+				}
+
+				int previous_m = m^(1 << bit_1)^(1 << bit_2);
+
+				int pair_score = round_no*(__gcd(A[bit_1], A[bit_2]));
+
+				max_score[m][round_no] = max(max_score[m][round_no], 
+										pair_score + max_score[previous_m][round_no - 1]);
+			}
+		}
+	}
+
+	cout << max_score[max_mask - 1][no_of_rounds] << "\n";
+
+	return 0;
+}

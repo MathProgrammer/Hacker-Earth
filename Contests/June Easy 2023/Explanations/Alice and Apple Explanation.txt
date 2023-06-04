@@ -19,6 +19,11 @@ using namespace std;
 
 int normalise(int n)
 {
+	if(n == 0)
+	{
+		return n; 
+	}
+	
 	while(n%2 == 0)
 	{
 		n /= 2;

@@ -1,0 +1,44 @@
+If A[i] x A[j] x A[k] is prime, then one of them is prime while two of them are 1 
+
+Let us iterate over every prime number and then count the number of triplets it is a part of. 
+
+-----
+
+void solve()
+{
+	int no_of_elements;
+	cin >> no_of_elements;
+
+	vector <int> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i];
+	}
+
+	vector <int> prefix_ones(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		prefix_ones[i] = prefix_ones[i - 1] + (A[i] == 1);
+	}
+
+	vector <int> suffix_ones(no_of_elements + 2);
+	for(int i = no_of_elements; i >= 1; i--)
+	{
+		suffix_ones[i] = suffix_ones[i + 1] + (A[i] == 1);
+	}
+
+	long long answer = 0;
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		if(is_prime[A[i]])
+		{
+			long long starting_here = choose_2(suffix_ones[i]);
+			long long middle_here = prefix_ones[i]*suffix_ones[i];
+			long long ending_here = choose_2(prefix_ones[i]);
+
+			answer += starting_here + middle_here + ending_here;
+		}
+	}
+
+	cout << answer << "\n";
+}

@@ -1,0 +1,122 @@
+A|B = A + B means that A and B have no common bits. 
+
+In other words, B is a submask of the complement of A. 
+
+We will precompute the number of integers that are submasks of the mask 
+
+-----
+
+Be careful to avoid overcounting in Zeta transform or sum of subsets DP 
+
+Iterating over the mask and then the bit overcounts 
+
+     for(int m = 0; m < MAX_MASK; m++)
+	{
+		for(int bit = 0; bit < NO_OF_BITS; bit++)
+		{
+			if(!is_bit_set(m, bit))
+			{
+				int future_mask = m|(1 << bit); 
+				mask_sum[future_mask] += mask_sum[m]; 
+			}
+		}
+	}
+
+Let us consider how many times f(1001) is counted in f(1111) 
+
+There are at least two paths 
+
+f(1001) -> f(1101) -> f(1111) 
+f(1001) -> f(1011) -> f(1111) 
+
+It is counted two times in f(1111) 
+
+---
+
+Instead we should iterate over the bit first and then the mask like this 
+
+      for(int bit = 0; bit < NO_OF_BITS; bit++)
+	{
+		for(int m = 0; m < MAX_MASK; m++)
+		{
+			if(!is_bit_set(m, bit))
+			{
+				int future_mask = m|(1 << bit); 
+				mask_sum[future_mask] += mask_sum[m]; 
+			}
+		}
+	}
+
+Now, when we iterate over the bit first, it does not allow this 
+
+When we iterate over the second bit, 
+
+f(1101) -> f(1111) 
+f(1001) -> f(1011) 
+
+When we iterate over the third bit, 
+
+f(1001) -> f(1101) 
+f(1011) -> f(1111) 
+
+Notice that f(1001) is counted in f(1111) only once now via 
+
+f(1001) -> f(1011) -> f(1111) 
+f(1001) is still counted in f(1101) but after f(1101) is already counted in f(1111) 
+
+Building the masks by adding bits in ascending order ensures there is a unique path between every mask and each of it's submasks. 
+Each submask is only counted once. 
+
+-----
+
+#include <iostream>
+#include <vector> 
+
+using namespace std;
+
+int is_bit_set(int n, int bit)
+{
+	return ( (n&(1 << bit)) != 0 );
+}
+
+int main() 
+{
+	int no_of_elements; 
+	cin >> no_of_elements; 
+
+	const int NO_OF_BITS = 20;
+	const int MAX_MASK = (1 << NO_OF_BITS);
+	vector <long long> mask_sum(MAX_MASK, 0);
+	vector <int> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i];
+		mask_sum[A[i]] += A[i];
+	}
+
+	for(int bit = 0; bit < NO_OF_BITS; bit++)
+	{
+		for(int m = 0; m < MAX_MASK; m++)
+		{
+			if(!is_bit_set(m, bit))
+			{
+				int future_mask = m|(1 << bit); 
+				mask_sum[future_mask] += mask_sum[m]; 
+			}
+		}
+	}
+
+	int no_of_queries; 
+	cin >> no_of_queries; 
+
+	for(int i = 1; i <= no_of_queries; i++)
+	{
+		int x; 
+		cin >> x; 
+
+		int complement = MAX_MASK - 1 - x; //cout << "Max = " << MAX_MASK << " = " << complement << "\n";
+		cout << mask_sum[complement] << "\n";
+	}
+
+	return 0;
+}

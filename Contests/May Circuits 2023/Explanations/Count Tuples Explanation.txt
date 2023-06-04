@@ -1,0 +1,183 @@
+Let us iterate over the middle elements. 
+Then there are two kinds of triplets 
+
+1. Prefix Smaller (i) x Suffix_larger (i) 
+2. Prefix Larger (i) x Suffix_smaller(i) 
+
+Prefix Smaller (i) and Prefix_larger(i) represents the number of elements <= A[i] and >= A[i] in the prefix and suffix respectively. 
+Suffix Smaller and Suffix_larger represent similar things for the suffix. 
+
+Notice that we are counting equal triplets (x, x, x) twice like this. We can resolve this by subtracting the number of equal triplets at the end. 
+
+The number of equal triplets of X is C(F(x), 3), where F(x) is the Frequency of x. 
+
+------
+
+How to calculate Prefix Smaller (i) and Prefix Larger (i) ? 
+
+Let us imagine we have an empty array B of length n. 
+
+We will insert elements into B in ascending order of A. In case of equal elements, we will go from left to right. 
+
+What happens when we are inserting A(i) into B(i) ? 
+
+1. All elements < A(i) are already inserted 
+2. All elements = A(i) to the left of i or in the prefix or i are also inserted. 
+
+This means 
+
+1. Prefix_smaller[i] = Number of elements inserted in [1, i - 1] 
+2. Suffix_larger[i] = Number of elements not inserted in [i + 1, n]
+
+----
+
+How to calculate Prefix Larger(i) and Suffix Smaller (i) ? 
+
+We can reuse the same idea but now sort A in descending order. In case of equal elements, we will go from left to right. 
+
+While inserted A(i) into B(i)
+1. All elements > A(i) are already in the array 
+2. All elements = A(i) in the prefix are already in the array
+
+This means 
+
+1. Prefix_larger[i] = Number of elements inserted in the suffix.
+2. Suffix_smaller[i] = Number of elements not inserted in the suffix
+
+-----
+
+We can use a segment tree to keep track of number of elements inserted into B at any point in time. 
+
+Remember to add 1 and not A(i) itself in the point update. We want to keep track of whether an integer is inserted, not it's value. 
+
+-----
+
+It's also a very elegant and beautiful idea that we can use the same function for both purposes. 
+
+-----
+
+void find(vector <int> &prefix_inserted, vector <int> &suffix_not_inserted, vector <pair <int, int> > &A)
+{
+	int no_of_elements = A.size() - 1;
+	vector <int> sum_tree(4*no_of_elements + 1);
+
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		int position = A[i].second;
+
+		prefix_inserted[i] = get_sum(sum_tree, 1, 1, no_of_elements, 1, position - 1);
+
+		int suffix = no_of_elements - position;
+		int suffix_inserted = get_sum(sum_tree, 1, 1, no_of_elements, position + 1, no_of_elements);
+		suffix_not_inserted[i] = suffix - suffix_inserted;
+
+		update(sum_tree, 1, 1, no_of_elements, position, 1);
+	}
+}
+
+----
+
+void solve()
+{
+	int no_of_elements; 
+	cin >> no_of_elements; 
+
+	map <int, int> frequency; 
+	vector <pair <int, int>> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i].first; 
+		A[i].second = i;
+
+		frequency[A[i].first]++;
+	}
+	sort(A.begin() + 1, A.end());
+
+	vector <int> prefix_smaller(no_of_elements + 1), suffix_larger(no_of_elements + 1);
+	find(prefix_smaller, suffix_larger, A); 
+
+	sort(A.begin() + 1, A.end(), sort_descending_equals_left_to_right);
+	vector <int> suffix_smaller(no_of_elements + 1), prefix_larger(no_of_elements + 1);
+	find(prefix_larger, suffix_smaller, A);
+
+	long long answer = 0;
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		answer += prefix_smaller[i]*suffix_larger[i]; 
+		answer += prefix_larger[i]*suffix_smaller[i];
+	}
+
+	long long equal_triplets = 0;
+	for(auto it = frequency.begin(); it != frequency.end(); it++)
+	{
+		equal_triplets += choose_3(it->second);
+	}
+	
+	answer -= equal_triplets;
+
+	cout << answer << "\n";
+}
+
+---- 
+
+Custom Sorting - 
+
+int sort_descending_equals_left_to_right(pair <int, int> &P, pair <int, int> &Q)
+{
+	if(P.first == Q.first)
+	{
+		return (P.second < Q.second);
+	}
+
+	return (P.first > Q.first);
+}
+
+----
+
+Segment Tree - Range Sum and Point Update functions 
+
+int get_sum(vector <int> &T, int n, int left, int right, int query_left, int query_right)
+{
+	if(right < left || query_right < left || right < query_left || query_right < query_left)
+	{
+		return 0;
+	}
+
+	if(query_left <= left && right <= query_right)
+	{
+		return T[n];
+	}
+
+	int mid = (left + right)/2;
+	int left_sum = get_sum(T, LEFT(n), left, mid, query_left, query_right);
+	int right_sum = get_sum(T, RIGHT(n), mid + 1, right, query_left, query_right);
+
+	int answer = left_sum + right_sum;
+
+	return answer;
+}
+
+-----
+
+Point Update 
+
+void update(vector <int> &T, int n, int left, int right, int position, int value)
+{
+	if(position < left || right < position)
+	{
+		return;
+	}
+
+	if(left == right)
+	{
+		T[n] = value;
+		return;
+	}
+
+	int mid = (left + right)/2;
+
+	update(T, LEFT(n), left, mid, position, value);
+	update(T, RIGHT(n), mid + 1, right, position, value);
+
+	T[n] = T[LEFT(n)] + T[RIGHT(n)];
+}

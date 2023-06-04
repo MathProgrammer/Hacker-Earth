@@ -1,0 +1,40 @@
+Let us sort the array. 
+
+It is clear that some prefix of the array will have X added and some suffix will have X subtracted. 
+
+Let us iterate over this prefix end. 
+
+There are two candidates for the maximum and the minimum. 
+
+Minimum - A[1] + X, A[i + 1] - X 
+Maximum - A[i] + X, A[n] - X 
+
+Calculate the maximum, minimum and difference for every possible prefix end. 
+
+------
+
+int main()
+{
+	int no_of_elements, x;
+	cin >> no_of_elements >> x;
+
+	vector <int> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i];
+	}
+	sort(A.begin() + 1, A.end());
+
+	int answer = A[no_of_elements] - A[1];
+	for(int i = 1; i < no_of_elements; i++)
+	{
+		int prefix_end = i;
+		int minimum = min(A[1] + x, A[prefix_end + 1] - x);
+		int maximum = max(A[prefix_end] + x, A[no_of_elements] - x);
+
+		answer = min(answer, maximum - minimum);
+	}
+
+	cout << answer << "\n";
+	return 0;
+}

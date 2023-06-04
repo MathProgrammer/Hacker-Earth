@@ -1,0 +1,75 @@
+Let us observe the structure of any integer M > X 
+
+M will match some prefix of X, will then have a 1 where X has a 0 and can then have any suffix. 
+
+We will have to count the number of subsequences where each element has the bits of M for every greater M. 
+
+However, we can make an observation to reduce our search space to at most O(log X) masks. 
+
+X = 1100110
+M = 111.... 
+M'= 1110010
+
+Suppose M = 1110000 and M' = 1110011 
+A sequence which has the bits of M' also has the bits of M. 
+
+So it is enough to check M. 
+It is enough to check the O(log N) masks of M, which are minimally greater than X 
+They match some prefix of X, have a 1 and then all 0s. 
+
+-----
+
+void solve()
+{
+	int no_of_elements, X;
+	cin >> no_of_elements >> X;
+
+	vector <int> A(no_of_elements + 1);
+	for(int i = 1; i <= no_of_elements; i++)
+	{
+		cin >> A[i];
+	}
+
+	const int NO_OF_BITS = 30;
+	int prefix_mask = 0, largest_subsequence = get_submask_subsequence(A, X);
+	for(int bit = NO_OF_BITS; bit >= 0; bit--)
+	{
+		if(!is_bit_set(X, bit))
+		{
+			int larger_mask = (prefix_mask|(1 << bit));
+			int subsequence_here = get_submask_subsequence(A, larger_mask);
+
+			largest_subsequence = max(largest_subsequence, subsequence_here);
+		}
+		else
+		{
+			prefix_mask |= (1 << bit);
+		}
+	}
+
+	int answer = (largest_subsequence == 0 ? -1 : largest_subsequence);
+	cout << answer << "\n";
+}
+
+
+-----
+
+How to count the length of the subsequence who's AND is >= M ? 
+
+----
+
+We will select all integers which have all the bits of M in it. 
+
+int get_submask_subsequence(vector <int> &A, int m)
+{
+	int count = 0;
+	for(int i = 1; i < A.size(); i++)
+	{
+		if((m&A[i]) == m)
+		{
+			count++;
+		}
+	}
+
+	return count;
+}

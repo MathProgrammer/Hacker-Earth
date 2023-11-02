@@ -7,7 +7,7 @@ long long gcd(long long a, long long b)
     if(b == 0)
         return a;
     else
-        return gcd(a, a%b);
+        return gcd(b, a%b);
 }
 
 long long no_of_factors(long long n)

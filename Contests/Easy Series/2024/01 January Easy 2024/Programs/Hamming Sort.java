@@ -43,16 +43,6 @@ class Hamming implements Comparable<Hamming>
 
 class TestClass 
 {
-    public static int gcd(int m, int n)
-    {
-        if(Math.min(m, n) == 0)
-        {
-            return Math.max(m, n);
-        }
-
-        return gcd(Math.max(m, n)%Math.min(m, n), Math.min(m, n));
-    }
-
     public static void main(String args[] ) throws Exception 
     {
         Scanner s = new Scanner(System.in);
